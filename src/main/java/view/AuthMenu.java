@@ -4,7 +4,14 @@
  */
 package view;
 
+import controller.Authentication;
+import controller.Customer;
+import controller.Employee;
 import java.awt.Color;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+import java.util.Scanner;
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
@@ -15,15 +22,95 @@ import javax.swing.JPanel;
 public class AuthMenu extends JFrame {
 
     public AuthMenu() {
-        JFrame window = new JFrame();
-    window.setLayout(null);  // Disable the layout manager to allow manual positioning
-    window.setVisible(true);
-    window.setSize(400, 400);
-    window.setTitle("This is my GUI");
 
-    JPanel header = new JPanel();
-    header.setBackground(Color.BLACK);
-    header.setBounds(10, 10, 380, 50); // Position (10, 10), width 380, height 50
-    window.add(header);
+        setLayout(null);
+        setSize(400, 400);
+        setTitle("LESCO");
+        JButton button1 = new JButton("Login as Employee");
+        JButton button2 = new JButton("Signup as Employee");
+        JButton button3 = new JButton("Login as Customer");
+        JButton button4 = new JButton("Back");
+        button1.setBounds(0, 0, 400, 50);
+        button2.setBounds(0, 50, 400, 50);
+        button3.setBounds(0, 100, 400, 50);
+        button4.setBounds(0, 150, 400, 50);
+        Authentication authObject = new Authentication();
+        
+        button1.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Employee signInUser = authObject.signInEmployee();
+                if (signInUser != null) {
+                    signInUser.employeeMenu();
+                }
+            }
+        });
+        
+        button2.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                               authObject.signUpEmployee();
+            }
+        });
+
+        button3.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                  Customer signInCust = authObject.signInCustomer();
+                if (signInCust != null) {
+                    signInCust.customerMenu();
+                }
+            }
+        });
+        
+        button3.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                  Customer signInCust = authObject.signInCustomer();
+                if (signInCust != null) {
+                    signInCust.customerMenu();
+                }
+            }
+        });
+        
+        button4.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+               dispose();
+            }
+        });
+        
+        
+        
+        add(button1);
+        add(button2);
+        add(button3);
+        add(button4);
+        setVisible(true);
+
+//        while (true) {
+//            Scanner authmenu = new Scanner(System.in);
+//            System.out.println("Press 1 to Login as Employee");
+//            System.out.println("Press 2 to Signup as Employee");
+//            System.out.println("Press 3 to Login as Customer");
+//            System.out.println("Press -1 to Exit");
+//            int menuNumber = authmenu.nextInt();
+//            Authentication authObject = new Authentication();
+//            if (menuNumber == 1) {
+//                Employee signInUser = authObject.signInEmployee();
+//                if (signInUser != null) {
+//                    signInUser.employeeMenu();
+//                }
+//            } else if (menuNumber == 2) {
+//                authObject.signUpEmployee();
+//            } else if (menuNumber == 3) {
+//                Customer signInCust = authObject.signInCustomer();
+//                if (signInCust != null) {
+//                    signInCust.customerMenu();
+//                }
+//            } else if (menuNumber == -1) {
+//                break;
+//            }
+//        }
     }
 }
