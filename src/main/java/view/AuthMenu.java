@@ -29,6 +29,7 @@ public class AuthMenu extends JFrame {
         JButton button2 = new JButton("Signup as Employee");
         JButton button3 = new JButton("Login as Customer");
         JButton button4 = new JButton("Exit App");
+        
         button1.setBounds(0, 0, 400, 50);
         button2.setBounds(0, 50, 400, 50);
         button3.setBounds(0, 100, 400, 50);
@@ -41,7 +42,7 @@ public class AuthMenu extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 Employee signInUser = authObject.signInEmployee();
                 if (signInUser != null) {
-                    signInUser.employeeMenu();
+                    dispose();
                 }
             }
         });

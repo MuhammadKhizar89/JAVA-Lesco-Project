@@ -13,6 +13,7 @@ import java.util.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import view.EmployeeMenu;
 
 public class Employee {
 
@@ -22,7 +23,7 @@ public class Employee {
     Employee() {
     }
 
-   public Employee(String userName, String password) {
+    public Employee(String userName, String password) {
         this.userName = userName;
         this.password = password;
     }
@@ -843,47 +844,11 @@ public class Employee {
     }
 
     public void employeeMenu() {
-        ArrayList<Customer> custList = Reader.readCustomerData();
-        ArrayList<BillingInfo> billList = Reader.readBillingInfo();
-        ArrayList<TariffTaxInfo> rates = Reader.readTariffInfo();
-        ArrayList<NADRADB> nadraInfo = Reader.readNADRAInfo();
-        while (true) {
-            Scanner employeMenu = new Scanner(System.in);
-            System.out.println("Press 1 to Add Customer (New Meter)");
-            System.out.println("Press 2 to Add Bill");
-            System.out.println("Press 3 to Pay Bill");
-            System.out.println("Press 4 to View Any Bill");
-            System.out.println("Press 5 to View Report of Paid And UnPaid Bills");
-            System.out.println("Press 6 to View Report of CNIC Expiry");
-            System.out.println("Press 7 to Update TarrifInfo");
-            System.out.println("Press 8 to Change Password");
-            System.out.println("Press 9 to Update CustomerInfo(Meter)");
-            System.out.println("Press 10 to Update Bill");
-            System.out.println("Press -1 to Exit");
-            int option = employeMenu.nextInt();
-            if (option == 1) {
-                addCustomerInfo(nadraInfo, custList);
-            } else if (option == 2) {
-                addBillingInfo(custList, billList, rates);
-            } else if (option == 3) {
-                payBill(custList, billList);
-            } else if (option == 4) {
-                viewBill(billList);
-            } else if (option == 5) {
-                viewBillReports(billList);
-            } else if (option == 6) {
-                viewCNICReports(nadraInfo);
-            } else if (option == 7) {
-                updateTarrifInfo(rates);
-            } else if (option == 8) {
-                changeEmployeePassword();
-            } else if (option == 9) {
-                updateCustomerInfo(nadraInfo, custList);
-            } else if (option == 10) {
-                updateBillInfo(billList, custList, rates);
-            } else if (option == -1) {
-                return;
-            }
+        try {
+            EmployeeMenu menuGUI = new EmployeeMenu();
+            menuGUI.setVisible(true);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
