@@ -62,10 +62,7 @@ public class SignInEmployee extends JFrame {
                 if (authenticatedEmployee != null) {
                     messageLabel.setText("Login Successful");
                     authenticatedEmployee.employeeMenu(); 
-//                    EmployeeMenu menuGUI = new EmployeeMenu();
-//                
-//                     menuGUI.setVisible(true);
-                     dispose();
+                    dispose();
                  } else {
                     messageLabel.setText("Invalid Username or Password");
                     JOptionPane.showMessageDialog(SignInEmployee.this, "Invalid Username or Password", "Login Failed", JOptionPane.ERROR_MESSAGE);
