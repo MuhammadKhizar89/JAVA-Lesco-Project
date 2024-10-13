@@ -38,6 +38,7 @@ public class Authentication {
     }
 
     public static Employee signInEmployee() {
+        
         Scanner employeeInputData = new Scanner(System.in);
         ArrayList<Employee> Data = Reader.readEmployeeData(Constants.EMPLOYEESDATA);
         while (true) {

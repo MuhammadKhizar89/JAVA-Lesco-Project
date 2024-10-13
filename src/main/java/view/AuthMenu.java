@@ -22,20 +22,20 @@ import javax.swing.JPanel;
 public class AuthMenu extends JFrame {
 
     public AuthMenu() {
-
         setLayout(null);
         setSize(400, 400);
         setTitle("LESCO");
         JButton button1 = new JButton("Login as Employee");
         JButton button2 = new JButton("Signup as Employee");
         JButton button3 = new JButton("Login as Customer");
-        JButton button4 = new JButton("Back");
+        JButton button4 = new JButton("Exit App");
         button1.setBounds(0, 0, 400, 50);
         button2.setBounds(0, 50, 400, 50);
         button3.setBounds(0, 100, 400, 50);
         button4.setBounds(0, 150, 400, 50);
+
         Authentication authObject = new Authentication();
-        
+
         button1.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -46,71 +46,35 @@ public class AuthMenu extends JFrame {
             }
         });
         
+
         button2.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                               authObject.signUpEmployee();
+                authObject.signUpEmployee();
             }
         });
 
         button3.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                  Customer signInCust = authObject.signInCustomer();
+                Customer signInCust = authObject.signInCustomer();
                 if (signInCust != null) {
                     signInCust.customerMenu();
                 }
             }
         });
-        
-        button3.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                  Customer signInCust = authObject.signInCustomer();
-                if (signInCust != null) {
-                    signInCust.customerMenu();
-                }
-            }
-        });
-        
+
         button4.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-               dispose();
+                dispose();
             }
         });
-        
-        
-        
+
         add(button1);
         add(button2);
         add(button3);
         add(button4);
         setVisible(true);
-
-//        while (true) {
-//            Scanner authmenu = new Scanner(System.in);
-//            System.out.println("Press 1 to Login as Employee");
-//            System.out.println("Press 2 to Signup as Employee");
-//            System.out.println("Press 3 to Login as Customer");
-//            System.out.println("Press -1 to Exit");
-//            int menuNumber = authmenu.nextInt();
-//            Authentication authObject = new Authentication();
-//            if (menuNumber == 1) {
-//                Employee signInUser = authObject.signInEmployee();
-//                if (signInUser != null) {
-//                    signInUser.employeeMenu();
-//                }
-//            } else if (menuNumber == 2) {
-//                authObject.signUpEmployee();
-//            } else if (menuNumber == 3) {
-//                Customer signInCust = authObject.signInCustomer();
-//                if (signInCust != null) {
-//                    signInCust.customerMenu();
-//                }
-//            } else if (menuNumber == -1) {
-//                break;
-//            }
-//        }
     }
 }
