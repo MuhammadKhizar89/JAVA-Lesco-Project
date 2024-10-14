@@ -28,13 +28,11 @@ public class EmployeeMenu extends JFrame {
         setVisible(true);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
     }
-
     private void addButton(String text, ActionListener action) {
         JButton button = new JButton(text);
         button.addActionListener(action);
         add(button);
     }
-
     private void addCustomerInfo() {
         JOptionPane.showMessageDialog(this, "Add Customer Info functionality triggered.");
     }

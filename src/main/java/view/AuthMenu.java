@@ -41,9 +41,7 @@ public class AuthMenu extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 Employee signInUser = authObject.signInEmployee();
-                if (signInUser != null) {
-                    dispose();
-                }
+                dispose();
             }
         });
         
