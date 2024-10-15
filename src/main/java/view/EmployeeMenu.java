@@ -1,5 +1,4 @@
 package view;
-
 import controller.BillingInfo;
 import controller.Customer;
 import controller.NADRADB;
@@ -17,9 +16,7 @@ import model.Reader;
 import model.Writer;
 import utility.Constants;
 import utility.Help;
-
 public class EmployeeMenu extends JFrame {
-
     private ArrayList<Customer> custList;
     private ArrayList<BillingInfo> billList;
     private ArrayList<TariffTaxInfo> rates;
@@ -65,45 +62,30 @@ public class EmployeeMenu extends JFrame {
         AddCustomerInfo obj = new AddCustomerInfo(custList, nadraInfo);
     }
     private void addBillingInfo() {
-        JOptionPane.showMessageDialog(this, "Add Billing Info functionality triggered.");
+        BillingInfoGUI obj=new BillingInfoGUI(custList,billList,rates);
     }
     private void payBill() {
         JOptionPane.showMessageDialog(this, "Pay Bill functionality triggered.");
-        // Add logic to handle bill payment
     }
-
     private void viewBill() {
         JOptionPane.showMessageDialog(this, "View Bill functionality triggered.");
-        // Add logic to view a specific bill
     }
-
     private void viewBillReports() {
         JOptionPane.showMessageDialog(this, "View Bill Reports functionality triggered.");
-        // Add logic to view report of paid and unpaid bills
     }
-
     private void viewCNICReports() {
         JOptionPane.showMessageDialog(this, "View CNIC Reports functionality triggered.");
-        // Add logic to view CNIC expiry report
     }
-
     private void updateTariffInfo() {
         JOptionPane.showMessageDialog(this, "Update Tariff Info functionality triggered.");
-        // Add logic to update tariff info
     }
-
     private void changeEmployeePassword() {
         JOptionPane.showMessageDialog(this, "Change Password functionality triggered.");
-        // Add logic to change employee password
     }
-
     private void updateCustomerInfo() {
         JOptionPane.showMessageDialog(this, "Update Customer Info functionality triggered.");
-        // Add logic to update customer info
     }
-
     private void updateBillInfo() {
         JOptionPane.showMessageDialog(this, "Update Bill Info functionality triggered.");
-        // Add logic to update bill info
     }
 }
