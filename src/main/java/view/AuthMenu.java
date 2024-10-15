@@ -20,7 +20,7 @@ import javax.swing.JPanel;
  * @author Admin
  */
 public class AuthMenu extends JFrame {
-
+    
     public AuthMenu() {
         setLayout(null);
         setSize(400, 400);
@@ -29,14 +29,11 @@ public class AuthMenu extends JFrame {
         JButton button2 = new JButton("Signup as Employee");
         JButton button3 = new JButton("Login as Customer");
         JButton button4 = new JButton("Exit App");
-        
         button1.setBounds(0, 0, 400, 50);
         button2.setBounds(0, 50, 400, 50);
         button3.setBounds(0, 100, 400, 50);
         button4.setBounds(0, 150, 400, 50);
-
         Authentication authObject = new Authentication();
-
         button1.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -45,31 +42,26 @@ public class AuthMenu extends JFrame {
             }
         });
         
-
         button2.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 authObject.signUpEmployee();
             }
         });
-
+        
         button3.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                Customer signInCust = authObject.signInCustomer();
-                if (signInCust != null) {
-                    signInCust.customerMenu();
-                }
+                authObject.signInCustomer();
             }
         });
-
+        
         button4.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                dispose();
+                System.exit(0);
             }
         });
-
         add(button1);
         add(button2);
         add(button3);

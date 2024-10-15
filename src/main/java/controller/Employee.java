@@ -844,12 +844,8 @@ public class Employee {
     }
 
     public void employeeMenu() {
-        try {
             EmployeeMenu menuGUI = new EmployeeMenu();
             menuGUI.setVisible(true);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
     @Override

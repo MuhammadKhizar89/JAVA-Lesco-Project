@@ -9,6 +9,7 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.Scanner;
+import view.CustomerMenuGUI;
 
 public class Customer {
 
@@ -240,23 +241,7 @@ public class Customer {
     }
 
     public void customerMenu() {
-        ArrayList<Customer> custList = Reader.readCustomerData();
-        ArrayList<BillingInfo> billList = Reader.readBillingInfo();
-        ArrayList<NADRADB> nadraInfo = Reader.readNADRAInfo();
-        while (true) {
-            Scanner employeMenu = new Scanner(System.in);
-            System.out.println("Press 1 to View Bill");
-            System.out.println("Press 2 to Update CNIC Expiry");
-            System.out.println("Press -1 to Exit");
-            int option = employeMenu.nextInt();
-            if (option == 1) {
-                viewBill(custList, billList);
-            } else if (option == 2) {
-                updateCNICexpiry(nadraInfo);
-            } else if (option == -1) {
-                return;
-            }
-        }
+        CustomerMenuGUI custmenuGUI=new  CustomerMenuGUI(cnic,customerId);        
     }
 
 }

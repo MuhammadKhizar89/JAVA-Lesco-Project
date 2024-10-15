@@ -6,7 +6,7 @@ import model.Reader;
 import model.Writer;
 import java.util.ArrayList;
 import java.util.Scanner;
-import view.SignInEmployee;
+import view.SignInGUI;
 public class Authentication {
 
     public static void signUpEmployee() {
@@ -37,27 +37,14 @@ public class Authentication {
     }
 
     public static Employee signInEmployee() {
-        SignInEmployee signInEmployee = new SignInEmployee();
+        SignInGUI signInEmployee = new SignInGUI();
+        signInEmployee.SignInEmployeeGUI();
         return signInEmployee.getAuthenticatedEmployee();
     }
 
-    public static Customer signInCustomer() {
-        Scanner customerInputData = new Scanner(System.in);
-        ArrayList<Customer> Data = Reader.readCustomerData();
-        while (true) {
-            System.out.println("Enter UserName");
-            String userName = customerInputData.nextLine();
-            System.out.println("Enter Password");
-            String password = customerInputData.nextLine();
-            for (Customer e : Data) {
-                if (e.getCustomerId().equals(userName) && e.getCnic().equals(password)) {
-                    System.out.println("SignIn Sucessfully");
-                    return e;
-                }
-            }
-            System.out.println("Invalid Username or Password");
-            break;
-        }
-        return null;
+    public static void signInCustomer() {
+        SignInGUI signIncust = new SignInGUI();
+        signIncust.SignInCustomerGUI();
+        
     }
 }
