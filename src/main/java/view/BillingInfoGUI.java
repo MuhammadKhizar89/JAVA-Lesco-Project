@@ -1,10 +1,8 @@
 package view;
-
 import controller.BillingInfo;
 import controller.Customer;
 import controller.TariffTaxInfo;
 import utility.Help;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -16,9 +14,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import model.Writer;
 import utility.Constants;
-
 public class BillingInfoGUI {
-
     private JFrame frame;
     private JTextField billingMonthField;
     private JTextField currentMeterReadingRegularField;
@@ -28,7 +24,6 @@ public class BillingInfoGUI {
     private ArrayList<Customer> custList;
     private ArrayList<BillingInfo> billList;
     private ArrayList<TariffTaxInfo> rates;
-
     public BillingInfoGUI(ArrayList<Customer> custList, ArrayList<BillingInfo> billList, ArrayList<TariffTaxInfo> rates) {
         this.custList = custList;
         this.billList = billList;

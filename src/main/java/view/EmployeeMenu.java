@@ -65,7 +65,7 @@ public class EmployeeMenu extends JFrame {
         BillingInfoGUI obj=new BillingInfoGUI(custList,billList,rates);
     }
     private void payBill() {
-        JOptionPane.showMessageDialog(this, "Pay Bill functionality triggered.");
+        PayBillGUI obj=new PayBillGUI(custList,billList);
     }
     private void viewBill() {
         JOptionPane.showMessageDialog(this, "View Bill functionality triggered.");
