@@ -1,9 +1,4 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package view;
-
 import controller.Authentication;
 import controller.Customer;
 import controller.Employee;
@@ -14,13 +9,7 @@ import java.util.Scanner;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-
-/**
- *
- * @author Admin
- */
 public class AuthMenu extends JFrame {
-    
     public AuthMenu() {
         setLayout(null);
         setSize(400, 400);
@@ -38,24 +27,20 @@ public class AuthMenu extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 Employee signInUser = authObject.signInEmployee();
-                dispose();
             }
         });
-        
         button2.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 authObject.signUpEmployee();
             }
         });
-        
         button3.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 authObject.signInCustomer();
             }
         });
-        
         button4.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
