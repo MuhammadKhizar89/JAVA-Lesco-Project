@@ -1,17 +1,13 @@
 package view;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import controller.BillingInfo;
-
 public class ViewBillReportsGUI extends JFrame {
-
     private JLabel paidBillLabel;
     private JLabel unpaidBillLabel;
-
     public ViewBillReportsGUI(ArrayList<BillingInfo> billList) {
         setTitle("Bill Report");
         setSize(400, 200);
@@ -23,14 +19,12 @@ public class ViewBillReportsGUI extends JFrame {
         add(paidBillLabel);
         add(unpaidBillLabel);
         viewBillReports(billList);
-
         setVisible(true);
     }
 
     private void viewBillReports(ArrayList<BillingInfo> billList) {
         double paidBillSum = 0;
         double unPaidBillSum = 0;
-
         for (BillingInfo b : billList) {
             if ("Paid".equals(b.getBillPaidStatus())) {
                 paidBillSum += b.getTotalBillingAmount();
@@ -38,10 +32,7 @@ public class ViewBillReportsGUI extends JFrame {
                 unPaidBillSum += b.getTotalBillingAmount();
             }
         }
-
-        // Updating labels with calculated sums
         paidBillLabel.setText("Total Amount of Paid Bills: " + paidBillSum);
         unpaidBillLabel.setText("Total Amount of Unpaid Bills: " + unPaidBillSum);
     }
-
 }

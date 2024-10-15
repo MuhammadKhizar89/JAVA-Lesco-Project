@@ -16,13 +16,19 @@ import model.Reader;
 import model.Writer;
 import utility.Constants;
 import utility.Help;
+
 public class EmployeeMenu extends JFrame {
+
+     private String userName;
+    private String password;
     private ArrayList<Customer> custList;
     private ArrayList<BillingInfo> billList;
     private ArrayList<TariffTaxInfo> rates;
     private ArrayList<NADRADB> nadraInfo;
 
-    public EmployeeMenu() {
+    public EmployeeMenu(String userName,String password) {
+        this.userName=userName;
+        this.password=password;
         custList = Reader.readCustomerData();
         billList = Reader.readBillingInfo();
         rates = Reader.readTariffInfo();
@@ -53,39 +59,50 @@ public class EmployeeMenu extends JFrame {
     private void backButton() {
         dispose();
     }
+
     private void addButton(String text, ActionListener action) {
         JButton button = new JButton(text);
         button.addActionListener(action);
         add(button);
     }
+
     private void addCustomer() {
-        AddCustomerInfo obj = new AddCustomerInfo(custList, nadraInfo);
+        new AddCustomerInfo(custList, nadraInfo);
     }
+
     private void addBillingInfo() {
-        new BillingInfoGUI(custList,billList,rates);
+        new BillingInfoGUI(custList, billList, rates);
     }
+
     private void payBill() {
-        new PayBillGUI(custList,billList);
+        new PayBillGUI(custList, billList);
     }
+
     private void viewBill() {
         new ViewBillGUI(billList);
     }
+
     private void viewBillReports() {
         new ViewBillReportsGUI(billList);
     }
+
     private void viewCNICReports() {
-        JOptionPane.showMessageDialog(this, "View CNIC Reports functionality triggered.");
+        new ViewCNICReports(nadraInfo);
     }
+
     private void updateTariffInfo() {
-        JOptionPane.showMessageDialog(this, "Update Tariff Info functionality triggered.");
+        new UpdateTariffInfoGUI(rates);
     }
+
     private void changeEmployeePassword() {
-        JOptionPane.showMessageDialog(this, "Change Password functionality triggered.");
+        new ChangeEmpPass(userName,password);
     }
+
     private void updateCustomerInfo() {
-        JOptionPane.showMessageDialog(this, "Update Customer Info functionality triggered.");
+        new UpdCustInfoGUI(nadraInfo,custList);
     }
+
     private void updateBillInfo() {
-        JOptionPane.showMessageDialog(this, "Update Bill Info functionality triggered.");
+        new UpdateBillInfoGUI(billList,custList,rates);
     }
 }

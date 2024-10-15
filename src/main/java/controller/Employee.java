@@ -484,18 +484,11 @@ public class Employee {
     }
 
     void viewCNICReports(ArrayList<NADRADB> nadraInfo) {
-        // Get current date
         LocalDate currentDate = LocalDate.now();
-
-        // Get the date 30 days ahead
         LocalDate within30Days = currentDate.plusDays(30);
         boolean isFound = false;
-        // Iterate through the NADRA database list
         for (NADRADB n : nadraInfo) {
-            // Parse the expiry date from the NADRA record (assuming it's stored as String in dd/MM/yyyy)
             LocalDate expiryDate = LocalDate.parse(n.getExpiryDate(), Help.Dateformatter);
-
-            // Check if the expiry date is within the next 30 days
             if (!expiryDate.isBefore(currentDate) && !expiryDate.isAfter(within30Days)) {
                 System.out.println("Customer with CNIC about to expire: " + n.getCNIC());
                 isFound = true;
@@ -729,7 +722,7 @@ public class Employee {
     }
 
     public void employeeMenu() {
-            EmployeeMenu menuGUI = new EmployeeMenu();
+            EmployeeMenu menuGUI = new EmployeeMenu(userName,password);
             menuGUI.setVisible(true);
     }
 
