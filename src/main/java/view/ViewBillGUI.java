@@ -13,7 +13,6 @@ public class ViewBillGUI extends JFrame {
     private JButton viewBillsButton;
     private JTable billTable;
     private DefaultTableModel tableModel;
-
     public ViewBillGUI(ArrayList<BillingInfo> billList) {
         setTitle("View Bills");
         setSize(600, 400);

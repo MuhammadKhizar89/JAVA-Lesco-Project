@@ -62,16 +62,16 @@ public class EmployeeMenu extends JFrame {
         AddCustomerInfo obj = new AddCustomerInfo(custList, nadraInfo);
     }
     private void addBillingInfo() {
-        BillingInfoGUI obj=new BillingInfoGUI(custList,billList,rates);
+        new BillingInfoGUI(custList,billList,rates);
     }
     private void payBill() {
-        PayBillGUI obj=new PayBillGUI(custList,billList);
+        new PayBillGUI(custList,billList);
     }
     private void viewBill() {
-        ViewBillGUI obj=new ViewBillGUI(billList);
+        new ViewBillGUI(billList);
     }
     private void viewBillReports() {
-        JOptionPane.showMessageDialog(this, "View Bill Reports functionality triggered.");
+        new ViewBillReportsGUI(billList);
     }
     private void viewCNICReports() {
         JOptionPane.showMessageDialog(this, "View CNIC Reports functionality triggered.");
