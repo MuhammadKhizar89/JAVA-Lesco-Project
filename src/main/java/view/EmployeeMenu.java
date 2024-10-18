@@ -40,6 +40,7 @@ public class EmployeeMenu extends JFrame {
         setTitle("Employee Menu");
         setSize(400, 500);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+       setLocationRelativeTo(null);
         setLayout(new GridLayout(11, 1, 5, 5));
         addButton("Add Customer (New Meter)", e -> addCustomer());
         addButton("Add Bill", e -> addBillingInfo());

@@ -14,6 +14,8 @@ public class AuthMenu extends JFrame {
         setLayout(null);
         setSize(400, 400);
         setTitle("LESCO");
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setLocationRelativeTo(null);
         JButton button1 = new JButton("Login as Employee");
         JButton button2 = new JButton("Signup as Employee");
         JButton button3 = new JButton("Login as Customer");

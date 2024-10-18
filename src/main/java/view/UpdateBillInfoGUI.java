@@ -32,7 +32,7 @@ public class UpdateBillInfoGUI {
     private void initialize() {
         frame = new JFrame("Update Billing Info");
         frame.setSize(400, 400);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         frame.setLayout(new GridLayout(0, 2));
         frame.add(new JLabel("Customer ID:"));
         customerIdField = new JTextField();
@@ -46,7 +46,7 @@ public class UpdateBillInfoGUI {
         frame.add(new JLabel("Current Meter Reading (Peak):"));
         currentMeterReadingPeakField = new JTextField();
         frame.add(currentMeterReadingPeakField);
-
+frame.setLocationRelativeTo(null);
         JButton updateButton = new JButton("Update Bill Info");
         updateButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {

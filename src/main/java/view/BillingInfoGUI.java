@@ -1,4 +1,5 @@
 package view;
+
 import controller.BillingInfo;
 import controller.Customer;
 import controller.TariffTaxInfo;
@@ -14,7 +15,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import model.Writer;
 import utility.Constants;
+
 public class BillingInfoGUI {
+
     private JFrame frame;
     private JTextField billingMonthField;
     private JTextField currentMeterReadingRegularField;
@@ -24,6 +27,7 @@ public class BillingInfoGUI {
     private ArrayList<Customer> custList;
     private ArrayList<BillingInfo> billList;
     private ArrayList<TariffTaxInfo> rates;
+
     public BillingInfoGUI(ArrayList<Customer> custList, ArrayList<BillingInfo> billList, ArrayList<TariffTaxInfo> rates) {
         this.custList = custList;
         this.billList = billList;
@@ -34,7 +38,7 @@ public class BillingInfoGUI {
     private void initialize() {
         frame = new JFrame("Add Billing Information");
         frame.setSize(400, 400);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         frame.setLayout(new GridLayout(7, 2));
 
         customerComboBox = new JComboBox<>();
@@ -55,7 +59,7 @@ public class BillingInfoGUI {
         frame.add(currentMeterReadingRegularField);
         frame.add(new JLabel("Current Meter Reading (Peak):"));
         frame.add(currentMeterReadingPeakField);
-
+        frame.setLocationRelativeTo(null);
         JButton submitButton = new JButton("Submit");
         submitButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -80,7 +84,7 @@ public class BillingInfoGUI {
             return;
         }
 
-         Customer foundCustomer = null;
+        Customer foundCustomer = null;
         for (Customer c : custList) {
             if (customerId.equals(c.getCustomerId())) {
                 foundCustomer = c;

@@ -29,7 +29,8 @@ public class CustomerMenuGUI extends JFrame {
         setTitle("Customer Menu");
         setSize(400, 300);
         setLayout(null);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setLocationRelativeTo(null);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         JButton viewBillButton = new JButton("View Bill");
         viewBillButton.setBounds(100, 50, 200, 30);
         viewBillButton.addActionListener(e -> viewBill());

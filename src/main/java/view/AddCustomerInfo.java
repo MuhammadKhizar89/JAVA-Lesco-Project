@@ -20,7 +20,7 @@ public class AddCustomerInfo extends JFrame {
     public AddCustomerInfo(ArrayList<Customer> custList, ArrayList<NADRADB> nadraInfo) {
         setTitle("Add Customer Information");
         setSize(350, 400);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
         setLayout(null);
         JLabel cnicLabel = new JLabel("CNIC:");

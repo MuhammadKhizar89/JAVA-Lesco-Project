@@ -63,7 +63,7 @@ public class SignInGUI extends JFrame {
         setLayout(null);
         setSize(400, 300);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-
+setLocationRelativeTo(null);
         JLabel usernameLabel = new JLabel("Username:");
         usernameLabel.setBounds(50, 50, 100, 25);
         add(usernameLabel);
