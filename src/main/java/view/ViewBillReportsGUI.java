@@ -13,7 +13,7 @@ public class ViewBillReportsGUI extends JFrame {
         setSize(400, 200);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
-        paidBillLabel = new JLabel("Total Amount of Paid Bills: ");
+        paidBillLabel = new JLabel("Total Amount of Paid Bills :");
         unpaidBillLabel = new JLabel("Total Amount of Unpaid Bills: ");
         setLayout(new GridLayout(3, 1));
         add(paidBillLabel);
