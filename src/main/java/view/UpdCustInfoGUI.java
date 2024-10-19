@@ -21,14 +21,20 @@ public class UpdCustInfoGUI extends JFrame {
     private JButton updateButton;
     private ArrayList<NADRADB> nadraInfo;
     private ArrayList<Customer> custList;
-    public UpdCustInfoGUI(ArrayList<NADRADB> nadraInfo, ArrayList<Customer> custList) {
+     private Runnable onUpdateSuccess;
+    String CustId;
+    public UpdCustInfoGUI(String CustId,ArrayList<NADRADB> nadraInfo, ArrayList<Customer> custList,Runnable onUpdateSuccess) {
         this.nadraInfo = nadraInfo;
         this.custList = custList;
+        this.CustId=CustId;
+        this.onUpdateSuccess = onUpdateSuccess; 
         setTitle("Update Customer Information");
         setSize(400, 400);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
         customerIdField = new JTextField(20);
+        customerIdField.setText(CustId);
+        customerIdField.setEditable(false);
         cnicField = new JTextField(13);
         nameField = new JTextField(20);
         addressField = new JTextField(20);
@@ -65,7 +71,7 @@ public class UpdCustInfoGUI extends JFrame {
     }
 
     private void updateCustomerInfo() {
-        String customerId = customerIdField.getText().trim();
+        String customerId = CustId;
         Customer foundCustomer = null;
         int index = -1;
         for (int i = 0; i < custList.size(); i++) {
@@ -138,7 +144,13 @@ public class UpdCustInfoGUI extends JFrame {
         indexList.add("5"); // Customer Type
         indexList.add("6"); // Meter Type
         indexList.add("7"); // Connection Date
-
+        custList.get(index).setCnic(cnic);
+        custList.get(index).setName(name);
+        custList.get(index).setAddress(address);
+        custList.get(index).setPhone(phone);
+        custList.get(index).setCustomerType(customerType);
+        custList.get(index).setMeterType(meterType);
+        custList.get(index).setConnectionDate(connectionDate);
         customerDataList.add(cnic);
         customerDataList.add(name);
         customerDataList.add(address);
@@ -149,6 +161,7 @@ public class UpdCustInfoGUI extends JFrame {
 
         Writer.updateFile(Constants.CUSTOMERINFO, foundCustomer.getCustomerId(), indexList, customerDataList);
         JOptionPane.showMessageDialog(this, "Customer Updated Successfully.", "Success", JOptionPane.INFORMATION_MESSAGE);
+         onUpdateSuccess.run();
         dispose(); // Close the window after updating
     }
 
