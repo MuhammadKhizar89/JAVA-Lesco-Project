@@ -44,14 +44,12 @@ public class EmployeeMenu extends JFrame {
         setLayout(new GridLayout(11, 1, 5, 5));
         addButton("Add Customer (New Meter)", e -> addCustomer());
         addButton("Add Bill", e -> addBillingInfo());
-        addButton("Pay Bill", e -> payBill());
         addButton("View Any Bill", e -> viewBill());
         addButton("View Report of Paid and Unpaid Bills", e -> viewBillReports());
         addButton("View Report of CNIC Expiry", e -> viewCNICReports());
         addButton("Update Tariff Info", e -> updateTariffInfo());
         addButton("Change Password", e -> changeEmployeePassword());
         addButton("Update Customer Info (Meter)", e -> updateCustomerInfo());
-        addButton("Update Bill", e -> updateBillInfo());
         addButton("Back", e -> backButton());
         setVisible(true);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -75,12 +73,10 @@ public class EmployeeMenu extends JFrame {
         new BillingInfoGUI(custList, billList, rates);
     }
 
-    private void payBill() {
-        new PayBillGUI(custList, billList);
-    }
+
 
     private void viewBill() {
-        new ViewBillGUI(billList);
+        new ViewBillGUI(billList,custList,rates);
     }
 
     private void viewBillReports() {
@@ -103,7 +99,5 @@ public class EmployeeMenu extends JFrame {
         new UpdCustInfoGUI(nadraInfo,custList);
     }
 
-    private void updateBillInfo() {
-        new UpdateBillInfoGUI(billList,custList,rates);
-    }
+    
 }
