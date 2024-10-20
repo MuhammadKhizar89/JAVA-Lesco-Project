@@ -161,8 +161,8 @@ public class UpdCustInfoGUI extends JFrame {
 
         Writer.updateFile(Constants.CUSTOMERINFO, foundCustomer.getCustomerId(), indexList, customerDataList);
         JOptionPane.showMessageDialog(this, "Customer Updated Successfully.", "Success", JOptionPane.INFORMATION_MESSAGE);
-         onUpdateSuccess.run();
-        dispose(); // Close the window after updating
+        onUpdateSuccess.run();
+        dispose();
     }
 
     private boolean isCNICPresentInNadra(String cnic) {

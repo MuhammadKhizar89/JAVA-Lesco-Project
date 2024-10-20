@@ -1,10 +1,14 @@
 package model;
 
+import controller.BillingInfo;
+import controller.Customer;
 import controller.TariffTaxInfo;
 import java.io.*;
 import java.util.ArrayList;
 import java.io.FileWriter;
 import java.io.IOException;
+import static model.Reader.readCustomerData;
+import utility.Constants;
 
 public class Writer {
 
@@ -157,7 +161,7 @@ public class Writer {
         }
     }
 
-    public static void updateBillFile(String filename, String id,String date, ArrayList<String> index, ArrayList<String> value) {
+    public static void updateBillFile(String filename, String id, String date, ArrayList<String> index, ArrayList<String> value) {
         File inputFile = new File(filename);
         File tempFile = new File("temp.txt");
 
@@ -170,7 +174,7 @@ public class Writer {
                 String[] customerData = currentLine.split(",");
 
                 // If the ID matches, update the specific fields
-                if (customerData[0].equals(id)&&customerData[1].equals(date)) {
+                if (customerData[0].equals(id) && customerData[1].equals(date)) {
                     // Iterate over the indexes and update only the specific ones
                     for (int i = 0; i < index.size(); i++) {
                         int updateIndex = Integer.parseInt(index.get(i));
@@ -206,5 +210,86 @@ public class Writer {
         }
     }
 
-    
+    public static void deleteCustomer(String customerId) {
+        ArrayList<Customer> customerList = readCustomerData();
+        boolean customerFound = false;
+        for (int i = 0; i < customerList.size(); i++) {
+            if (customerList.get(i).getCustomerId().equals(customerId)) {
+                customerList.remove(i);
+                customerFound = true;
+                break;
+            }
+        }
+        if (!customerFound) {
+            System.out.println("Customer with ID " + customerId + " not found.");
+            return;
+        }
+
+        // Write the updated customer list back to the file
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(Constants.CUSTOMERINFO))) {
+            for (Customer customer : customerList) {
+                String line = customer.getCustomerId() + ","
+                        + customer.getCnic() + ","
+                        + customer.getName() + ","
+                        + customer.getAddress() + ","
+                        + customer.getPhone() + ","
+                        + customer.getCustomerType() + ","
+                        + customer.getMeterType() + ","
+                        + customer.getConnectionDate() + ","
+                        + customer.getRegularUnitsConsumed() + ","
+                        + (customer.getPeakHourUnitsConsumed().isEmpty() ? "-1" : customer.getPeakHourUnitsConsumed());
+                writer.write(line);
+                writer.newLine();
+            }
+        } catch (IOException e) {
+            System.out.println("Error writing to file.");
+        }
+
+        System.out.println("Customer with ID " + customerId + " has been deleted successfully.");
+    }
+
+    public static void deleteBill(String customerId, String billingMonth) {
+        ArrayList<BillingInfo> billList = Reader.readBillingInfo();// Read all bills
+        boolean billDeleted = false;
+
+        // Find the bill to delete in the list
+        for (int i = 0; i < billList.size(); i++) {
+            BillingInfo bill = billList.get(i);
+            if (bill.getCustomerId().equals(customerId) && bill.getBillingMonth().equals(billingMonth)) {
+                billList.remove(i); // Remove the bill from the list
+                billDeleted = true;
+                break;
+            }
+        }
+
+        if (billDeleted) {
+            // Write the updated bill list back to the file
+            try (BufferedWriter writer = new BufferedWriter(new FileWriter(Constants.BILLINGINFO))) {
+                for (BillingInfo bill : billList) {
+                    // Convert the bill to a comma-separated line and write it to the file
+                    writer.write(String.join(",",
+                            bill.getCustomerId(),
+                            bill.getBillingMonth(),
+                            String.valueOf(bill.getCurrentMeterReadingRegular()),
+                            String.valueOf(bill.getCurrentMeterReadingPeak()),
+                            bill.getBillingDate(),
+                            String.valueOf(bill.getCostOfElectricity()),
+                            String.valueOf(bill.getSalesTax()),
+                            String.valueOf(bill.getFixedCharges()),
+                            String.valueOf(bill.getTotalBillingAmount()),
+                            bill.getDueDate(),
+                            bill.getBillPaidStatus(),
+                            bill.getBillPaymentDate()
+                    ));
+                    writer.newLine();
+                }
+            } catch (IOException e) {
+                System.out.println("Error writing updated billing info to file.");
+            }
+            System.out.println("Bill deleted successfully.");
+        } else {
+            System.out.println("Bill not found.");
+        }
+    }
+
 }

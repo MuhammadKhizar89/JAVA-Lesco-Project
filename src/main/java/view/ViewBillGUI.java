@@ -14,6 +14,7 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import model.Writer;
 
 public class ViewBillGUI extends JFrame {
 
@@ -29,15 +30,16 @@ public class ViewBillGUI extends JFrame {
         this.custList = custList;
         this.rates = rates;
         setTitle("View Bills");
-        setSize(800, 400);
+        setSize(900, 400);  // Increased width to fit the new column
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
 
         JLabel customerIdLabel = new JLabel("Customer ID:");
         customerIdField = new JTextField(15);
 
+        // Added the new "Delete Bill" column
         String[] columnNames = {"Customer ID", "Billing Month", "Meter Reading (Regular)", "Meter Reading (Peak)",
-            "Billing Date", "Total Amount", "Due Date", "Paid Status", "Payment Date", "Update Bill", "Pay Bill"};
+            "Billing Date", "Total Amount", "Due Date", "Paid Status", "Payment Date", "Update Bill", "Pay Bill", "Delete Bill"};
         tableModel = new DefaultTableModel(columnNames, 0);
         billTable = new JTable(tableModel);
 
@@ -66,10 +68,16 @@ public class ViewBillGUI extends JFrame {
         });
 
         loadAllBills();
+
         billTable.getColumn("Update Bill").setCellRenderer(new ButtonRenderer());
         billTable.getColumn("Update Bill").setCellEditor(new ButtonEditor(new JCheckBox(), billList, "Update"));
+
         billTable.getColumn("Pay Bill").setCellRenderer(new ButtonRenderer());
         billTable.getColumn("Pay Bill").setCellEditor(new ButtonEditor(new JCheckBox(), billList, "Pay"));
+
+        // Set up delete column
+        billTable.getColumn("Delete Bill").setCellRenderer(new ButtonRenderer());
+        billTable.getColumn("Delete Bill").setCellEditor(new ButtonEditor(new JCheckBox(), billList, "Delete"));
 
         setVisible(true);
     }
@@ -98,7 +106,8 @@ public class ViewBillGUI extends JFrame {
                 bill.getBillPaidStatus(),
                 bill.getBillPaymentDate(),
                 bill.equals(lastBillMap.get(bill.getCustomerId())) ? "Update" : "Disabled",
-                "Pay"
+                "Pay",
+                bill.getBillPaidStatus().equalsIgnoreCase("unpaid") ? "Delete" : "Disabled"
             };
             tableModel.addRow(rowData);
         }
@@ -127,14 +136,15 @@ public class ViewBillGUI extends JFrame {
                         bill.getBillPaidStatus(),
                         bill.getBillPaymentDate(),
                         bill.equals(lastBillMap.get(bill.getCustomerId())) ? "Update" : "Disabled",
-                        "Pay"
+                        "Pay",
+                        bill.getBillPaidStatus().equalsIgnoreCase("unpaid") ? "Delete" : "Disabled"
                     };
                     tableModel.addRow(rowData);
                 }
             }
         }
         if (tableModel.getRowCount() == 0) {
-            Object[] emptyRow = {"No results found", "", "", "", "", "", "", "", "", "", ""};
+            Object[] emptyRow = {"No results found", "", "", "", "", "", "", "", "", "", "", ""};
             tableModel.addRow(emptyRow);
         }
     }
@@ -181,6 +191,8 @@ public class ViewBillGUI extends JFrame {
                         updateBill(customerId, date);
                     } else if (actionType.equals("Pay")) {
                         payBill(customerId, date);
+                    } else if (actionType.equals("Delete") && !label.equals("Disabled")) {
+                        deleteBill(customerId, date);
                     }
                 }
             });
@@ -210,5 +222,29 @@ public class ViewBillGUI extends JFrame {
         private void payBill(String customerId, String date) {
             new PayBillGUI(custList, billList, customerId, date, () -> loadAllBills());
         }
+
+        private void deleteBill(String customerId, String date) {
+            // Flag to check if deletion was successful
+            boolean deleted = false;
+
+            // Iterate through the bill list to find the bill to delete
+            for (int i = 0; i < billList.size(); i++) {
+                BillingInfo bill = billList.get(i);
+                if (bill.getCustomerId().equals(customerId) && bill.getBillingMonth().equals(date)) {
+                    billList.remove(i); // Remove the bill from the list
+                    deleted = true;     // Mark as successfully deleted
+                    break;
+                }
+            }
+
+            Writer.deleteBill(customerId, date);
+            if (deleted) {
+                JOptionPane.showMessageDialog(null, "Bill deleted successfully.");
+            } else {
+                JOptionPane.showMessageDialog(null, "Bill not found.", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+            loadAllBills();
+        }
+
     }
 }

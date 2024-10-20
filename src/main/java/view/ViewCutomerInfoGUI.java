@@ -10,6 +10,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import model.Writer;
 
 public class ViewCutomerInfoGUI extends JFrame {
 
@@ -57,7 +58,7 @@ public class ViewCutomerInfoGUI extends JFrame {
     }
 
     private void populateTable() {
-           tableModel.setRowCount(0);
+        tableModel.setRowCount(0);
         for (Customer customer : custList) {
             Object[] rowData = {
                 customer.getCustomerId(),
@@ -93,18 +94,15 @@ public class ViewCutomerInfoGUI extends JFrame {
 
     // Editor for button cells
     class ButtonEditor extends DefaultCellEditor {
-
         private String label;
         private boolean isPushed;
         private ArrayList<Customer> customerList;
         private String actionType;
-
         public ButtonEditor(JCheckBox checkBox, ArrayList<Customer> customerList, String actionType) {
             super(checkBox);
             this.customerList = customerList;
             this.actionType = actionType;
         }
-
         @Override
         public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
             label = (value == null) ? "" : value.toString();
@@ -123,33 +121,28 @@ public class ViewCutomerInfoGUI extends JFrame {
             });
             return button;
         }
-
         @Override
         public Object getCellEditorValue() {
             return label;
         }
-
         @Override
         public boolean stopCellEditing() {
             isPushed = false;
             return super.stopCellEditing();
         }
-
         @Override
         protected void fireEditingStopped() {
             super.fireEditingStopped();
         }
-
         private void updateCustomer(Customer customer) {
             new UpdCustInfoGUI(customer.getCustomerId(), nadraInfo, customerList, () -> populateTable());
         }
-
         private void removeCustomer(Customer customer, int row) {
             int confirm = JOptionPane.showConfirmDialog(ViewCutomerInfoGUI.this,
                     "Are you sure you want to remove Customer ID: " + customer.getCustomerId() + "?",
                     "Remove Customer", JOptionPane.YES_NO_OPTION);
             if (confirm == JOptionPane.YES_OPTION) {
-                // Remove the customer from the list
+                Writer.deleteCustomer(customer.getCustomerId());
                 customerList.remove(customer);
                 tableModel.removeRow(row);
             }
