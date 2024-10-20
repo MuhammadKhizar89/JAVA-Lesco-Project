@@ -83,51 +83,59 @@ public class ViewBillGUI extends JFrame {
     }
 
     private void loadAllBills() {
-    tableModel.setRowCount(0); // Clear existing rows
+        tableModel.setRowCount(0); // Clear existing rows
 
-    // Create a map to store the last bill for each customer ID
-    Map<String, BillingInfo> lastBillMap = new HashMap<>();
+        // Create a map to store the last bill for each customer ID
+        Map<String, BillingInfo> lastBillMap = new HashMap<>();
 
-    // Populate the map with the last bill for each customer ID
-    for (BillingInfo bill : billList) {
-        lastBillMap.put(bill.getCustomerId(), bill);
+        // Populate the map with the last bill for each customer ID
+        for (BillingInfo bill : billList) {
+            lastBillMap.put(bill.getCustomerId(), bill);
+        }
+
+        // Now load the bills into the table
+        for (BillingInfo bill : billList) {
+            // Check if this is the last bill for the customer
+            boolean isLastBill = bill.equals(lastBillMap.get(bill.getCustomerId()));
+
+            // If the bill is paid, disable the delete button
+            boolean isPaid = bill.getBillPaidStatus().equalsIgnoreCase("paid");
+
+            Object[] rowData = {
+                bill.getCustomerId(),
+                bill.getBillingMonth(),
+                bill.getCurrentMeterReadingRegular(),
+                bill.getCurrentMeterReadingPeak(),
+                bill.getBillingDate(),
+                bill.getTotalBillingAmount(),
+                bill.getDueDate(),
+                bill.getBillPaidStatus(),
+                bill.getBillPaymentDate(),
+                isLastBill ? "Update" : "Disabled", // Enable Update only for the last bill
+                "Pay",
+                (isLastBill && !isPaid) ? "Delete" : "Disabled" // Disable Delete if Paid or if not the last bill
+            };
+            tableModel.addRow(rowData);
+        }
     }
-
-    // Now load the bills into the table
-    for (BillingInfo bill : billList) {
-        // Check if this is the last bill for the customer
-        boolean isLastBill = bill.equals(lastBillMap.get(bill.getCustomerId()));
-        Object[] rowData = {
-            bill.getCustomerId(),
-            bill.getBillingMonth(),
-            bill.getCurrentMeterReadingRegular(),
-            bill.getCurrentMeterReadingPeak(),
-            bill.getBillingDate(),
-            bill.getTotalBillingAmount(),
-            bill.getDueDate(),
-            bill.getBillPaidStatus(),
-            bill.getBillPaymentDate(),
-            isLastBill ? "Update" : "Disabled",  // Enable Update only for the last bill
-            "Pay",
-            isLastBill ? "Delete" : "Disabled"   // Enable Delete only if Update is enabled
-        };
-        tableModel.addRow(rowData);
-    }
-}
-
 
     private void filterBills() {
         String searchText = customerIdField.getText().toLowerCase();
-        tableModel.setRowCount(0);
+        tableModel.setRowCount(0); // Clear the table
+
         Map<String, BillingInfo> lastBillMap = new HashMap<>();
         for (BillingInfo bill : billList) {
             lastBillMap.put(bill.getCustomerId(), bill);
         }
+
         if (searchText.isEmpty()) {
-            loadAllBills();
+            loadAllBills(); // Load all bills if no search text
         } else {
             for (BillingInfo bill : billList) {
-                if (bill.getCustomerId().equals(searchText)) {
+                if (bill.getCustomerId().equalsIgnoreCase(searchText)) {
+                    boolean isLastBill = bill.equals(lastBillMap.get(bill.getCustomerId()));
+                    boolean isPaid = bill.getBillPaidStatus().equalsIgnoreCase("paid");
+
                     Object[] rowData = {
                         bill.getCustomerId(),
                         bill.getBillingMonth(),
@@ -138,14 +146,15 @@ public class ViewBillGUI extends JFrame {
                         bill.getDueDate(),
                         bill.getBillPaidStatus(),
                         bill.getBillPaymentDate(),
-                        bill.equals(lastBillMap.get(bill.getCustomerId())) ? "Update" : "Disabled",
+                        isLastBill ? "Update" : "Disabled", // Enable Update only for the last bill
                         "Pay",
-                        bill.getBillPaidStatus().equalsIgnoreCase("unpaid") ? "Delete" : "Disabled"
+                        (isLastBill && !isPaid) ? "Delete" : "Disabled" // Disable Delete if Paid or if not the last bill
                     };
                     tableModel.addRow(rowData);
                 }
             }
         }
+
         if (tableModel.getRowCount() == 0) {
             Object[] emptyRow = {"No results found", "", "", "", "", "", "", "", "", "", "", ""};
             tableModel.addRow(emptyRow);
