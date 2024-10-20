@@ -8,7 +8,6 @@ import java.util.ArrayList;
 
 public class Help {
     public static DateTimeFormatter Dateformatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-
     public static String generateCustomerId() {
           int maxCustomerId = 0;
         try (BufferedReader reader = new BufferedReader(new FileReader(Constants.CUSTOMERINFO))) {
@@ -19,7 +18,6 @@ public class Help {
                     System.out.println(data);
                     String customerIdStr = data[0].trim();
                     int customerId = Integer.parseInt(customerIdStr);
-                    // Update maxCustomerId if current customerId is larger
                         maxCustomerId = customerId;
                 }
                 line = reader.readLine(); 

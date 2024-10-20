@@ -8,7 +8,6 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import model.Writer;
 import utility.Constants;
-
 public class UpdCustInfoGUI extends JFrame {
     private JTextField customerIdField;
     private JTextField cnicField;
@@ -133,17 +132,15 @@ public class UpdCustInfoGUI extends JFrame {
             return;
         }
         foundCustomer.setConnectionDate(connectionDate);
-
-        // Update customer info in the data file
         ArrayList<String> indexList = new ArrayList<>();
         ArrayList<String> customerDataList = new ArrayList<>();
-        indexList.add("1"); // CNIC
-        indexList.add("2"); // Name
-        indexList.add("3"); // Address
-        indexList.add("4"); // Phone
-        indexList.add("5"); // Customer Type
-        indexList.add("6"); // Meter Type
-        indexList.add("7"); // Connection Date
+        indexList.add("1"); 
+        indexList.add("2"); 
+        indexList.add("3"); 
+        indexList.add("4"); 
+        indexList.add("5"); 
+        indexList.add("6"); 
+        indexList.add("7"); 
         custList.get(index).setCnic(cnic);
         custList.get(index).setName(name);
         custList.get(index).setAddress(address);
@@ -158,7 +155,6 @@ public class UpdCustInfoGUI extends JFrame {
         customerDataList.add(customerType);
         customerDataList.add(meterType);
         customerDataList.add(connectionDate);
-
         Writer.updateFile(Constants.CUSTOMERINFO, foundCustomer.getCustomerId(), indexList, customerDataList);
         JOptionPane.showMessageDialog(this, "Customer Updated Successfully.", "Success", JOptionPane.INFORMATION_MESSAGE);
         onUpdateSuccess.run();

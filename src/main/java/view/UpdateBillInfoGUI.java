@@ -9,9 +9,7 @@ import java.awt.event.*;
 import java.util.ArrayList;
 import model.Writer;
 import utility.Constants;
-
 public class UpdateBillInfoGUI {
-
     private JFrame frame;
     private JTextField currentMeterReadingRegularField;
     private JTextField currentMeterReadingPeakField;

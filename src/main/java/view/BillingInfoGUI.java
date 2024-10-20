@@ -154,7 +154,6 @@ public class BillingInfoGUI {
         double totalBilling = costofElectricity + ((costofElectricity / 100.0) * salesTax) + fixed;
         String todayDate = LocalDate.now().format(Help.Dateformatter);
         String dateAfter7DaysFormatted = LocalDate.now().plusDays(7).format(Help.Dateformatter);
-
         ArrayList<String> AllData = new ArrayList<>();
         AllData.add(foundCustomer.getCustomerId());
         AllData.add(billingMonth);
@@ -168,15 +167,10 @@ public class BillingInfoGUI {
         AllData.add(dateAfter7DaysFormatted);
         AllData.add("Unpaid");
         AllData.add("N/A");
-
-        // Write the billing info to the file or database
         Writer.write(Constants.BILLINGINFO, AllData);
-
-        // Add the billing info to the list
         billList.add(new BillingInfo(
                 customerId, billingMonth, currentMeterReadingRegular, currentMeterReadingPeak, todayDate, costofElectricity,
                 salesTax, fixed, totalBilling, dateAfter7DaysFormatted, "Unpaid", "N/A"));
-
         JOptionPane.showMessageDialog(frame, "Bill info added successfully. Total billing: " + totalBilling);
     }
 

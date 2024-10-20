@@ -1,5 +1,4 @@
 package view;
-
 import controller.Customer;
 import controller.NADRADB;
 import javax.swing.*;
@@ -19,15 +18,15 @@ public class ViewCutomerInfoGUI extends JFrame {
 
     private ArrayList<NADRADB> nadraInfo;
     private ArrayList<Customer> custList;
-    private ArrayList<Customer> filteredCustList;  // Store filtered customers
+    private ArrayList<Customer> filteredCustList;
     private JTable customerTable;
     private DefaultTableModel tableModel;
-    private JTextField searchField;  // Search bar
+    private JTextField searchField;
 
     public ViewCutomerInfoGUI(ArrayList<NADRADB> nadraInfo, ArrayList<Customer> custList) {
         this.nadraInfo = nadraInfo;
         this.custList = custList;
-        this.filteredCustList = new ArrayList<>(custList);  // Initially show all customers
+        this.filteredCustList = new ArrayList<>(custList);
         init();
     }
 
@@ -36,8 +35,6 @@ public class ViewCutomerInfoGUI extends JFrame {
         setSize(800, 400);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
-
-        // Create a panel to hold the search bar
         JPanel searchPanel = new JPanel(new BorderLayout());
         searchField = new JTextField(20);
         searchField.getDocument().addDocumentListener(new DocumentListener() {
@@ -58,9 +55,7 @@ public class ViewCutomerInfoGUI extends JFrame {
         });
         searchPanel.add(new JLabel("Search: "), BorderLayout.WEST);
         searchPanel.add(searchField, BorderLayout.CENTER);
-        add(searchPanel, BorderLayout.NORTH);  // Add the search panel at the top
-
-        // Set up the table model
+        add(searchPanel, BorderLayout.NORTH);
         String[] columnNames = {
             "Customer ID", "CNIC", "Name", "Address", "Phone",
             "Customer Type", "Meter Type", "Connection Date",
@@ -69,26 +64,18 @@ public class ViewCutomerInfoGUI extends JFrame {
         };
         tableModel = new DefaultTableModel(columnNames, 0);
         customerTable = new JTable(tableModel);
-
-        // Add custom cell editors and renderers for the buttons
         customerTable.getColumn("Update").setCellRenderer(new ButtonRenderer());
         customerTable.getColumn("Update").setCellEditor(new ButtonEditor(new JCheckBox(), filteredCustList, "Update"));
         customerTable.getColumn("Remove").setCellRenderer(new ButtonRenderer());
         customerTable.getColumn("Remove").setCellEditor(new ButtonEditor(new JCheckBox(), filteredCustList, "Remove"));
-
         populateTable();
-
-        // Add table to JScrollPane
         JScrollPane scrollPane = new JScrollPane(customerTable);
         add(scrollPane, BorderLayout.CENTER);
-
-        // Finalize frame setup
         setVisible(true);
     }
 
-    // Populate the table with customer data
     private void populateTable() {
-        tableModel.setRowCount(0);  // Clear the table first
+        tableModel.setRowCount(0);
         for (Customer customer : filteredCustList) {
             Object[] rowData = {
                 customer.getCustomerId(),
@@ -101,26 +88,25 @@ public class ViewCutomerInfoGUI extends JFrame {
                 customer.getConnectionDate(),
                 customer.getRegularUnitsConsumed(),
                 customer.getPeakHourUnitsConsumed(),
-                "Update",  // Placeholder for button text
-                "Remove"  // Placeholder for button text
+                "Update",
+                "Remove"
             };
             tableModel.addRow(rowData);
         }
     }
 
-    // Filter the table based on the search query
     private void filterTable() {
         String query = searchField.getText().toLowerCase();
         filteredCustList = (ArrayList<Customer>) custList.stream()
-            .filter(c -> c.getName().toLowerCase().contains(query)
-                    || c.getCnic().toLowerCase().contains(query)
-                    || c.getCustomerId().toLowerCase().contains(query))  // You can add more fields to filter by
-            .collect(Collectors.toList());
+                .filter(c -> c.getName().toLowerCase().contains(query)
+                || c.getCnic().toLowerCase().contains(query)
+                || c.getCustomerId().toLowerCase().contains(query))
+                .collect(Collectors.toList());
         populateTable();
     }
 
-    // Renderer for button cells
     class ButtonRenderer extends JButton implements TableCellRenderer {
+
         public ButtonRenderer() {
             setOpaque(true);
         }
@@ -132,8 +118,8 @@ public class ViewCutomerInfoGUI extends JFrame {
         }
     }
 
-    // Editor for button cells
     class ButtonEditor extends DefaultCellEditor {
+
         private String label;
         private boolean isPushed;
         private ArrayList<Customer> customerList;

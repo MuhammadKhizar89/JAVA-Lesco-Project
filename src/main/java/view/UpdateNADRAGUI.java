@@ -1,5 +1,4 @@
 package view;
-
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -11,14 +10,11 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import model.Writer;
 import utility.Constants;
-
 public class UpdateNADRAGUI extends JFrame {
-
     private JTextField issueDateField;
     private JTextField expiryDateField;
     private NADRADB obj;
     private Runnable obj1;
-
     public UpdateNADRAGUI(NADRADB obj, Runnable obj1) {
         this.obj1 = obj1;
         this.obj = obj;
@@ -89,5 +85,4 @@ public class UpdateNADRAGUI extends JFrame {
             JOptionPane.showMessageDialog(this, "Error parsing dates. Please ensure they are in DD/MM/YYYY format.");
         }
     }
-
 }

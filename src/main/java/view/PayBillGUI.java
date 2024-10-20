@@ -14,12 +14,10 @@ import utility.Constants;
 import utility.Help;
 
 public class PayBillGUI extends JFrame {
-
     private JTextField customerIdField;
     private JTextField billingMonthField;
     private JButton payBillButton;
     private JTable billTable;
-
     PayBillGUI(ArrayList<Customer> custList, ArrayList<BillingInfo> billList, String customerId, String billingMonth, Runnable onSuccess) {
         Customer foundCustomer = null;
         BillingInfo foundBill = null;

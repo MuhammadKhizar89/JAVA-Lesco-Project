@@ -1,13 +1,4 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package controller;
-
-/**
- *
- * @author Admin
- */
 public class BillingInfo {
     private String customerId;
     private String billingMonth;
@@ -21,8 +12,6 @@ public class BillingInfo {
     private String dueDate;
     private String billPaidStatus;
     private String billPaymentDate;
-
-    // Parameterized constructor
     public BillingInfo(String customerId, String billingMonth, int currentMeterReadingRegular, int currentMeterReadingPeak, 
                        String billingDate, int costOfElectricity, double salesTax, int fixedCharges, double totalBillingAmount, 
                        String dueDate, String billPaidStatus, String billPaymentDate) {

@@ -27,36 +27,24 @@ public class NADRAGUI extends JFrame {
         setSize(800, 400);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
-
-        // Create a panel for the search bar
         JPanel searchPanel = new JPanel(new BorderLayout());
         searchField = new JTextField();
         searchField.setToolTipText("Search by CNIC or Date");
         searchPanel.add(new JLabel("Search: "), BorderLayout.WEST);
         searchPanel.add(searchField, BorderLayout.CENTER);
-
-        // Set up the table model
         String[] columnNames = {"CNIC", "Issue Date", "Expiry Date", "Update"};
         tableModel = new DefaultTableModel(columnNames, 0);
         nadraTable = new JTable(tableModel);
-
-        // Add custom cell editors and renderers for the buttons
         nadraTable.getColumn("Update").setCellRenderer(new ButtonRenderer());
         nadraTable.getColumn("Update").setCellEditor(new ButtonEditor(new JCheckBox(), nadraInfo));
-
         populateTable();
-
-        // Add TableRowSorter to enable row filtering
         rowSorter = new TableRowSorter<>(tableModel);
         nadraTable.setRowSorter(rowSorter);
-
-        // Add search functionality to the searchField
         searchField.getDocument().addDocumentListener(new javax.swing.event.DocumentListener() {
             @Override
             public void insertUpdate(javax.swing.event.DocumentEvent e) {
                 filterTable();
             }
-
             @Override
             public void removeUpdate(javax.swing.event.DocumentEvent e) {
                 filterTable();
@@ -76,16 +64,11 @@ public class NADRAGUI extends JFrame {
                 }
             }
         });
-
-        // Add the search panel and the table to the frame
         add(searchPanel, BorderLayout.NORTH);
         JScrollPane scrollPane = new JScrollPane(nadraTable);
         add(scrollPane, BorderLayout.CENTER);
-
-        // Finalize frame setup
         setVisible(true);
     }
-
     private void populateTable() {
         tableModel.setRowCount(0);
         for (NADRADB nadra : nadraInfo) {
@@ -93,37 +76,29 @@ public class NADRAGUI extends JFrame {
                 nadra.getCNIC(),
                 nadra.getIssueDate(),
                 nadra.getExpiryDate(),
-                "Update" // Placeholder for button text
+                "Update" 
             };
             tableModel.addRow(rowData);
         }
     }
-
-    // Renderer for button cells
     class ButtonRenderer extends JButton implements TableCellRenderer {
-
         public ButtonRenderer() {
             setOpaque(true);
         }
-
         @Override
         public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
             setText((value == null) ? "" : value.toString());
             return this;
         }
     }
-
-    // Editor for button cells
     class ButtonEditor extends DefaultCellEditor {
         private String label;
         private boolean isPushed;
         private ArrayList<NADRADB> nadraList;
-
         public ButtonEditor(JCheckBox checkBox, ArrayList<NADRADB> nadraList) {
             super(checkBox);
             this.nadraList = nadraList;
         }
-
         @Override
         public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
             label = (value == null) ? "" : value.toString();

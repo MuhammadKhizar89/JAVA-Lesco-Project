@@ -1,5 +1,4 @@
 package view;
-
 import controller.BillingInfo;
 import controller.Customer;
 import controller.NADRADB;
@@ -7,16 +6,13 @@ import controller.TariffTaxInfo;
 import model.Writer;
 import utility.Constants;
 import utility.Help;
-
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
-
 public class AddCustomerInfo extends JFrame {
     private JTextField cnicField, nameField, addressField, phoneField, customerTypeField, meterTypeField, connectionDateField;
     private JButton addButton;
-
     public AddCustomerInfo(ArrayList<Customer> custList, ArrayList<NADRADB> nadraInfo) {
         setTitle("Add Customer Information");
         setSize(350, 400);
@@ -29,61 +25,46 @@ public class AddCustomerInfo extends JFrame {
         cnicField = new JTextField();
         cnicField.setBounds(150, 30, 150, 25);
         add(cnicField);
-
         JLabel nameLabel = new JLabel("Name:");
         nameLabel.setBounds(30, 70, 80, 25);
         add(nameLabel);
-
         nameField = new JTextField();
         nameField.setBounds(150, 70, 150, 25);
         add(nameField);
-
         JLabel addressLabel = new JLabel("Address:");
         addressLabel.setBounds(30, 110, 80, 25);
         add(addressLabel);
-
         addressField = new JTextField();
         addressField.setBounds(150, 110, 150, 25);
         add(addressField);
-
         JLabel phoneLabel = new JLabel("Phone:");
         phoneLabel.setBounds(30, 150, 80, 25);
         add(phoneLabel);
-
         phoneField = new JTextField();
         phoneField.setBounds(150, 150, 150, 25);
         add(phoneField);
-
         JLabel customerTypeLabel = new JLabel("Customer Type:");
         customerTypeLabel.setBounds(30, 190, 100, 25);
         add(customerTypeLabel);
-
         customerTypeField = new JTextField();
         customerTypeField.setBounds(150, 190, 150, 25);
         add(customerTypeField);
-
         JLabel meterTypeLabel = new JLabel("Meter Type:");
         meterTypeLabel.setBounds(30, 230, 100, 25);
         add(meterTypeLabel);
-
         meterTypeField = new JTextField();
         meterTypeField.setBounds(150, 230, 150, 25);
         add(meterTypeField);
-
         JLabel connectionDateLabel = new JLabel("Connection Date:");
         connectionDateLabel.setBounds(30, 270, 120, 25);
         add(connectionDateLabel);
-
         connectionDateField = new JTextField();
         connectionDateField.setBounds(150, 270, 150, 25);
         add(connectionDateField);
-
         addButton = new JButton("Add Customer");
         addButton.setBounds(100, 320, 150, 30);
         add(addButton);
-
         setVisible(true);
-
         addButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -94,14 +75,10 @@ public class AddCustomerInfo extends JFrame {
                 String customerType = customerTypeField.getText();
                 String meterType = meterTypeField.getText();
                 String connectionDate = connectionDateField.getText();
-
-                // Validate CNIC
                 if (!cnic.matches("\\d{13}")) {
                     JOptionPane.showMessageDialog(null, "Invalid CNIC. Please enter exactly 13 digits without dashes.", "Error", JOptionPane.ERROR_MESSAGE);
                     return;
                 }
-
-                // Check CNIC in NADRA
                 boolean isCNICPresentInNadra = false;
                 for (NADRADB n : nadraInfo) {
                     if (n.getCNIC().equals(cnic)) {
@@ -113,8 +90,6 @@ public class AddCustomerInfo extends JFrame {
                     JOptionPane.showMessageDialog(null, "This CNIC Not Found in NADRA DB.", "Error", JOptionPane.ERROR_MESSAGE);
                     return;
                 }
-
-                // Check for meter limit
                 int meterCount = 0;
                 for (Customer c : custList) {
                     if (c.getCnic().equals(cnic)) {
@@ -125,8 +100,6 @@ public class AddCustomerInfo extends JFrame {
                     JOptionPane.showMessageDialog(null, "Not Allowed! Maximum 3 meters allowed per CNIC.", "Error", JOptionPane.ERROR_MESSAGE);
                     return;
                 }
-
-                // Validate other fields
                 if (name.trim().isEmpty()) {
                     JOptionPane.showMessageDialog(null, "Name cannot be empty.", "Error", JOptionPane.ERROR_MESSAGE);
                     return;
@@ -151,8 +124,6 @@ public class AddCustomerInfo extends JFrame {
                     JOptionPane.showMessageDialog(null, "Invalid Date format. Please enter in DD/MM/YYYY format.", "Error", JOptionPane.ERROR_MESSAGE);
                     return;
                 }
-
-                // Add customer information
                 String customerId = Help.generateCustomerId();
                 ArrayList<String> customerDataList = new ArrayList<>();
                 customerDataList.add(customerId);
@@ -165,7 +136,6 @@ public class AddCustomerInfo extends JFrame {
                 customerDataList.add(connectionDate);
                 customerDataList.add("0");
                 customerDataList.add(meterType.equalsIgnoreCase("Three Phase") ? "0" : "0");
-
                 custList.add(new Customer(customerId, cnic, name, address, phone, customerType, meterType, connectionDate, "0", "0"));
                 Writer.write(Constants.CUSTOMERINFO, customerDataList);
                 JOptionPane.showMessageDialog(null, "Customer added successfully. Customer ID: " + customerId, "Success", JOptionPane.INFORMATION_MESSAGE);

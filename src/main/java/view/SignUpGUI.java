@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import model.Reader;
 import model.Writer;
 import utility.Constants;
-
 public class SignUpGUI extends JFrame {
     private JTextField usernameField;
     private JPasswordField passwordField;

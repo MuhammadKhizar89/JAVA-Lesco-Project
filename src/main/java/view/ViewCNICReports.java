@@ -1,5 +1,4 @@
 package view;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -8,11 +7,8 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import controller.NADRADB;
 import utility.Help;
-
 public class ViewCNICReports extends JFrame {
-
     private JTextArea resultTextArea;
-
     public ViewCNICReports(ArrayList<NADRADB> nadraInfo) {
         setTitle("CNIC Expiry Notification");
         setSize(400, 300);
@@ -25,7 +21,6 @@ public class ViewCNICReports extends JFrame {
         checkExpiry(nadraInfo);
         setVisible(true);
     }
-
     private void checkExpiry(ArrayList<NADRADB> nadraInfo) {
         LocalDate currentDate = LocalDate.now();
         LocalDate within30Days = currentDate.plusDays(30);

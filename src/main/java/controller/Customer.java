@@ -39,7 +39,6 @@ public class Customer {
         this.peakHourUnitsConsumed = peakHourUnitsConsumed;
     }
 
-// Getter and Setter for customerId
     public String getCustomerId() {
         return customerId;
     }
@@ -48,7 +47,6 @@ public class Customer {
         this.customerId = customerId;
     }
 
-    // Getter and Setter for cnic
     public String getCnic() {
         return cnic;
     }
@@ -57,7 +55,6 @@ public class Customer {
         this.cnic = cnic;
     }
 
-    // Getter and Setter for name
     public String getName() {
         return name;
     }
@@ -143,101 +140,6 @@ public class Customer {
                 + ", regularUnitsConsumed='" + regularUnitsConsumed + '\''
                 + ", peakHourUnitsConsumed='" + peakHourUnitsConsumed + '\''
                 + '}';
-    }
-
-    void viewBill(ArrayList<Customer> custList, ArrayList<BillingInfo> billList) {
-        Scanner custInfo = new Scanner(System.in);
-        System.out.print("Enter customerId to View All BIlls: ");
-        String customerId = custInfo.nextLine();
-        Customer foundCustomer = null;
-
-        for (Customer c : custList) {
-            if (customerId.equals(c.getCustomerId())) {
-                if (cnic.equals(c.getCnic())) {
-                    System.out.println("Customer Found: " + c.toString());
-                    foundCustomer = c;
-                    break;
-                } else {
-                    System.out.println("NO such customerID found on your CNIC");
-                    return;
-                }
-            }
-        }
-        if (foundCustomer == null) {
-            System.out.println("No bill found for this Customer ID.");
-            return;
-        }
-        boolean flag = false;
-
-        for (BillingInfo b : billList) {
-            if (b.getCustomerId().equals(customerId)) {
-                System.out.print(b.toString() + '\n');
-                flag = true;
-            }
-        }
-        if (!flag) {
-            System.out.print("No Bill Found of Such id \n");
-        }
-    }
-
-    void updateCNICexpiry(ArrayList<NADRADB> nadraInfo) {
-        NADRADB found_nadra = null;
-        for (NADRADB n : nadraInfo) {
-            if (n.getCNIC().equals(cnic)) {
-                System.out.println("Your Current Info " + n.toString());
-                found_nadra = n;
-            }
-        }
-
-        if (found_nadra == null) {
-            System.out.println("No data Found for your CNIC in NADRA DB");
-            return;  // Exit if no record is found
-        }
-
-        Scanner dateInfo = new Scanner(System.in);
-        String expiryDateInfo = "";
-        String issueDateInfo = found_nadra.getIssueDate();
-
-        // Parse issue date
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-        LocalDate issueDate;
-        try {
-            issueDate = LocalDate.parse(issueDateInfo, formatter);
-        } catch (DateTimeParseException e) {
-            System.out.println("Invalid issue date format in NADRA DB.");
-            return;
-        }
-
-        boolean isValid = false;
-        while (!isValid) {
-            System.out.print("Enter Expiry Date (DD/MM/YYYY): ");
-            expiryDateInfo = dateInfo.nextLine();
-
-            // Validate format
-            if (expiryDateInfo.matches("\\d{2}/\\d{2}/\\d{4}")) {
-                try {
-                    LocalDate expiryDate = LocalDate.parse(expiryDateInfo, formatter);
-
-                    // Check if expiry date is after issue date
-                    if (expiryDate.isAfter(issueDate)) {
-                        isValid = true;
-                    } else {
-                        System.out.println("Expiry date must be after the issue date (" + issueDateInfo + ").");
-                    }
-                } catch (DateTimeParseException e) {
-                    System.out.println("Invalid date format. Please enter a valid date.");
-                }
-            } else {
-                System.out.println("Invalid Date format. Please enter in DD/MM/YYYY format.");
-            }
-        }
-
-        // Continue with updating the file
-        ArrayList<String> index = new ArrayList<>();
-        ArrayList<String> value = new ArrayList<>();
-        index.add("2");
-        value.add(expiryDateInfo);
-        Writer.updateFile(Constants.NADRA, cnic, index, value);
     }
 
     public void customerMenu() {

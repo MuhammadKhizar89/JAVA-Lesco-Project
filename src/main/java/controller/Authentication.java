@@ -13,7 +13,7 @@ public class Authentication {
     public static void signUpEmployee() {
         SignUpGUI signupEmployee = new SignUpGUI();
     }
-
+    
     public static Employee signInEmployee() {
         SignInGUI signInEmployee = new SignInGUI();
         signInEmployee.SignInEmployeeGUI();

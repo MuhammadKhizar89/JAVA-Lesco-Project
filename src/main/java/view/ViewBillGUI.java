@@ -1,9 +1,7 @@
 package view;
-
 import controller.BillingInfo;
 import controller.Customer;
 import controller.TariffTaxInfo;
-
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
@@ -15,9 +13,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import model.Writer;
-
 public class ViewBillGUI extends JFrame {
-
     private JTextField customerIdField;
     private JTable billTable;
     private DefaultTableModel tableModel;
@@ -30,26 +26,21 @@ public class ViewBillGUI extends JFrame {
         this.custList = custList;
         this.rates = rates;
         setTitle("View Bills");
-        setSize(900, 400);  // Increased width to fit the new column
+        setSize(900, 400);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
-
         JLabel customerIdLabel = new JLabel("Customer ID:");
         customerIdField = new JTextField(15);
-
-        // Added the new "Delete Bill" column
         String[] columnNames = {"Customer ID", "Billing Month", "Meter Reading (Regular)", "Meter Reading (Peak)",
             "Billing Date", "Total Amount", "Due Date", "Paid Status", "Payment Date", "Update Bill", "Pay Bill", "Delete Bill"};
         tableModel = new DefaultTableModel(columnNames, 0);
         billTable = new JTable(tableModel);
-
         setLayout(new BorderLayout());
         JPanel inputPanel = new JPanel();
         inputPanel.add(customerIdLabel);
         inputPanel.add(customerIdField);
         add(inputPanel, BorderLayout.NORTH);
         add(new JScrollPane(billTable), BorderLayout.CENTER);
-
         customerIdField.getDocument().addDocumentListener(new DocumentListener() {
             @Override
             public void insertUpdate(DocumentEvent e) {
@@ -66,41 +57,25 @@ public class ViewBillGUI extends JFrame {
                 filterBills();
             }
         });
-
         loadAllBills();
-
         billTable.getColumn("Update Bill").setCellRenderer(new ButtonRenderer());
         billTable.getColumn("Update Bill").setCellEditor(new ButtonEditor(new JCheckBox(), billList, "Update"));
-
         billTable.getColumn("Pay Bill").setCellRenderer(new ButtonRenderer());
         billTable.getColumn("Pay Bill").setCellEditor(new ButtonEditor(new JCheckBox(), billList, "Pay"));
-
-        // Set up delete column
         billTable.getColumn("Delete Bill").setCellRenderer(new ButtonRenderer());
         billTable.getColumn("Delete Bill").setCellEditor(new ButtonEditor(new JCheckBox(), billList, "Delete"));
-
         setVisible(true);
     }
 
     private void loadAllBills() {
-        tableModel.setRowCount(0); // Clear existing rows
-
-        // Create a map to store the last bill for each customer ID
+        tableModel.setRowCount(0);
         Map<String, BillingInfo> lastBillMap = new HashMap<>();
-
-        // Populate the map with the last bill for each customer ID
         for (BillingInfo bill : billList) {
             lastBillMap.put(bill.getCustomerId(), bill);
         }
-
-        // Now load the bills into the table
         for (BillingInfo bill : billList) {
-            // Check if this is the last bill for the customer
             boolean isLastBill = bill.equals(lastBillMap.get(bill.getCustomerId()));
-
-            // If the bill is paid, disable the delete button
             boolean isPaid = bill.getBillPaidStatus().equalsIgnoreCase("paid");
-
             Object[] rowData = {
                 bill.getCustomerId(),
                 bill.getBillingMonth(),
@@ -111,31 +86,27 @@ public class ViewBillGUI extends JFrame {
                 bill.getDueDate(),
                 bill.getBillPaidStatus(),
                 bill.getBillPaymentDate(),
-                isLastBill ? "Update" : "Disabled", // Enable Update only for the last bill
+                isLastBill ? "Update" : "Disabled",
                 "Pay",
-                (isLastBill && !isPaid) ? "Delete" : "Disabled" // Disable Delete if Paid or if not the last bill
+                (isLastBill && !isPaid) ? "Delete" : "Disabled"
             };
             tableModel.addRow(rowData);
         }
     }
-
     private void filterBills() {
         String searchText = customerIdField.getText().toLowerCase();
-        tableModel.setRowCount(0); // Clear the table
-
+        tableModel.setRowCount(0); 
         Map<String, BillingInfo> lastBillMap = new HashMap<>();
         for (BillingInfo bill : billList) {
             lastBillMap.put(bill.getCustomerId(), bill);
         }
-
         if (searchText.isEmpty()) {
-            loadAllBills(); // Load all bills if no search text
+            loadAllBills();
         } else {
             for (BillingInfo bill : billList) {
                 if (bill.getCustomerId().equalsIgnoreCase(searchText)) {
                     boolean isLastBill = bill.equals(lastBillMap.get(bill.getCustomerId()));
                     boolean isPaid = bill.getBillPaidStatus().equalsIgnoreCase("paid");
-
                     Object[] rowData = {
                         bill.getCustomerId(),
                         bill.getBillingMonth(),
@@ -171,24 +142,21 @@ public class ViewBillGUI extends JFrame {
         public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
             String buttonText = (value == null) ? "" : value.toString();
             setText(buttonText);
-            setEnabled(!buttonText.equals("Disabled")); // Enable or disable based on the text
+            setEnabled(!buttonText.equals("Disabled"));
             return this;
         }
     }
 
     class ButtonEditor extends DefaultCellEditor {
-
         private String label;
         private boolean isPushed;
         private ArrayList<BillingInfo> billList;
         private String actionType;
-
         public ButtonEditor(JCheckBox checkBox, ArrayList<BillingInfo> billList, String actionType) {
             super(checkBox);
             this.billList = billList;
             this.actionType = actionType;
         }
-
         @Override
         public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
             label = (value == null) ? "" : value.toString();
