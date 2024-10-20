@@ -61,14 +61,13 @@ public class BillingInfoGUI {
         submitButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 addBillingInfo();
-//                frame.dispose();
             }
         });
         frame.add(submitButton);
         frame.add(resultLabel);
         frame.setVisible(true);
     }
-    
+
     private void addBillingInfo() {
         String customerId = (String) customerComboBox.getSelectedItem();
         String billingMonth = billingMonthField.getText();
@@ -121,13 +120,13 @@ public class BillingInfoGUI {
         int currentMeterReadingPeak;
         try {
             currentMeterReadingRegular = Integer.parseInt(meterReadingRegularText);
-            if (currentMeterReadingRegular < reg) {
+            if (currentMeterReadingRegular <= reg) {
                 JOptionPane.showMessageDialog(frame, "Reading cannot be less than the previous meter reading.", "Error", JOptionPane.ERROR_MESSAGE);
                 return;
             }
             if (foundCustomer.getMeterType().equalsIgnoreCase("Three Phase")) {
                 currentMeterReadingPeak = Integer.parseInt(meterReadingPeakText);
-                if (currentMeterReadingPeak < peak) {
+                if (currentMeterReadingPeak <= peak) {
                     JOptionPane.showMessageDialog(frame, "Reading cannot be less than previous peak reading.", "Error", JOptionPane.ERROR_MESSAGE);
                     return;
                 }
@@ -138,6 +137,8 @@ public class BillingInfoGUI {
             JOptionPane.showMessageDialog(frame, "Invalid meter readings.", "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
+        currentMeterReadingRegular = currentMeterReadingRegular - reg;
+        currentMeterReadingPeak = currentMeterReadingPeak - peak;
         double salesTax;
         int fixed, regularUnitsPrice, peakhourUnitsPrice;
         TariffTaxInfo rateInfo;
@@ -157,6 +158,8 @@ public class BillingInfoGUI {
         ArrayList<String> AllData = new ArrayList<>();
         AllData.add(foundCustomer.getCustomerId());
         AllData.add(billingMonth);
+        currentMeterReadingRegular = currentMeterReadingRegular + reg;
+        currentMeterReadingPeak = currentMeterReadingPeak + peak;
         AllData.add(Integer.toString(currentMeterReadingRegular));
         AllData.add(Integer.toString(currentMeterReadingPeak));
         AllData.add(todayDate);
@@ -171,6 +174,7 @@ public class BillingInfoGUI {
         billList.add(new BillingInfo(
                 customerId, billingMonth, currentMeterReadingRegular, currentMeterReadingPeak, todayDate, costofElectricity,
                 salesTax, fixed, totalBilling, dateAfter7DaysFormatted, "Unpaid", "N/A"));
+        frame.dispose();
         JOptionPane.showMessageDialog(frame, "Bill info added successfully. Total billing: " + totalBilling);
     }
 
