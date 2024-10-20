@@ -83,35 +83,38 @@ public class ViewBillGUI extends JFrame {
     }
 
     private void loadAllBills() {
-        tableModel.setRowCount(0); // Clear existing rows
+    tableModel.setRowCount(0); // Clear existing rows
 
-        // Create a map to store the last bill for each customer ID
-        Map<String, BillingInfo> lastBillMap = new HashMap<>();
+    // Create a map to store the last bill for each customer ID
+    Map<String, BillingInfo> lastBillMap = new HashMap<>();
 
-        // Populate the map with the last bill for each customer ID
-        for (BillingInfo bill : billList) {
-            lastBillMap.put(bill.getCustomerId(), bill);
-        }
-
-        // Now load the bills into the table
-        for (BillingInfo bill : billList) {
-            Object[] rowData = {
-                bill.getCustomerId(),
-                bill.getBillingMonth(),
-                bill.getCurrentMeterReadingRegular(),
-                bill.getCurrentMeterReadingPeak(),
-                bill.getBillingDate(),
-                bill.getTotalBillingAmount(),
-                bill.getDueDate(),
-                bill.getBillPaidStatus(),
-                bill.getBillPaymentDate(),
-                bill.equals(lastBillMap.get(bill.getCustomerId())) ? "Update" : "Disabled",
-                "Pay",
-                bill.getBillPaidStatus().equalsIgnoreCase("unpaid") ? "Delete" : "Disabled"
-            };
-            tableModel.addRow(rowData);
-        }
+    // Populate the map with the last bill for each customer ID
+    for (BillingInfo bill : billList) {
+        lastBillMap.put(bill.getCustomerId(), bill);
     }
+
+    // Now load the bills into the table
+    for (BillingInfo bill : billList) {
+        // Check if this is the last bill for the customer
+        boolean isLastBill = bill.equals(lastBillMap.get(bill.getCustomerId()));
+        Object[] rowData = {
+            bill.getCustomerId(),
+            bill.getBillingMonth(),
+            bill.getCurrentMeterReadingRegular(),
+            bill.getCurrentMeterReadingPeak(),
+            bill.getBillingDate(),
+            bill.getTotalBillingAmount(),
+            bill.getDueDate(),
+            bill.getBillPaidStatus(),
+            bill.getBillPaymentDate(),
+            isLastBill ? "Update" : "Disabled",  // Enable Update only for the last bill
+            "Pay",
+            isLastBill ? "Delete" : "Disabled"   // Enable Delete only if Update is enabled
+        };
+        tableModel.addRow(rowData);
+    }
+}
+
 
     private void filterBills() {
         String searchText = customerIdField.getText().toLowerCase();
@@ -224,19 +227,15 @@ public class ViewBillGUI extends JFrame {
         }
 
         private void deleteBill(String customerId, String date) {
-            // Flag to check if deletion was successful
             boolean deleted = false;
-
-            // Iterate through the bill list to find the bill to delete
             for (int i = 0; i < billList.size(); i++) {
                 BillingInfo bill = billList.get(i);
                 if (bill.getCustomerId().equals(customerId) && bill.getBillingMonth().equals(date)) {
-                    billList.remove(i); // Remove the bill from the list
-                    deleted = true;     // Mark as successfully deleted
+                    billList.remove(i);
+                    deleted = true;
                     break;
                 }
             }
-
             Writer.deleteBill(customerId, date);
             if (deleted) {
                 JOptionPane.showMessageDialog(null, "Bill deleted successfully.");
@@ -245,6 +244,5 @@ public class ViewBillGUI extends JFrame {
             }
             loadAllBills();
         }
-
     }
 }
