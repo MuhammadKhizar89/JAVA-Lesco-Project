@@ -1,4 +1,5 @@
 package view;
+import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -8,7 +9,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
-import model.Writer;
+
 import utility.Constants;
 public class UpdateNADRAGUI extends JFrame {
     private JTextField issueDateField;
@@ -77,7 +78,19 @@ public class UpdateNADRAGUI extends JFrame {
             ArrayList<String> value = new ArrayList<>();
             value.add(issueDate);
             value.add(expiryDate);
-            Writer.updateFile(Constants.NADRA, obj.getCNIC(), index, value);
+            String dataToSend = "updateNADRA#" + obj.getCNIC() + ";" + issueDate + ";" + expiryDate;
+            try {
+                Constants.client.connect();
+                Constants.client.sendData(dataToSend);
+                String response = Constants.client.waitForResponse(); // Capture server response
+                System.out.println(response); // Display response for confirmation
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            } finally {
+                Constants.client.close();
+            }
+
+
             JOptionPane.showMessageDialog(this, "Updated successfully.");
             obj1.run();
             dispose();

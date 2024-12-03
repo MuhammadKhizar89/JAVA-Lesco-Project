@@ -9,10 +9,13 @@ import javax.swing.table.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import model.Writer;
+
+import utility.Constants;
+
 public class ViewBillGUI extends JFrame {
     private JTextField customerIdField;
     private JTable billTable;
@@ -196,7 +199,7 @@ public class ViewBillGUI extends JFrame {
         }
 
         private void updateBill(String customerId, String date) {
-            new UpdateBillInfoGUI(billList, custList, rates, customerId, date);
+            new UpdateBillInfoGUI(billList, custList, rates, customerId, date,() -> loadAllBills());
         }
 
         private void payBill(String customerId, String date) {
@@ -209,11 +212,21 @@ public class ViewBillGUI extends JFrame {
                 BillingInfo bill = billList.get(i);
                 if (bill.getCustomerId().equals(customerId) && bill.getBillingMonth().equals(date)) {
                     billList.remove(i);
-                    deleted = true;
                     break;
                 }
             }
-            Writer.deleteBill(customerId, date);
+            String dataToSend = "deleteBill#" + customerId + ";" + date;
+            try {
+                Constants.client.connect();
+                Constants.client.sendData(dataToSend);
+                String response = Constants.client.waitForResponse();
+                System.out.println(response);  // Log server response
+                deleted = true;
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            } finally {
+                Constants.client.close();
+            }
             if (deleted) {
                 JOptionPane.showMessageDialog(null, "Bill deleted successfully.");
             } else {

@@ -6,13 +6,14 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
-import javax.swing.table.TableCellEditor;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.stream.Collectors;
-import model.Writer;
+
+import utility.Constants;
 
 public class ViewCutomerInfoGUI extends JFrame {
 
@@ -175,7 +176,18 @@ public class ViewCutomerInfoGUI extends JFrame {
                     "Are you sure you want to remove Customer ID: " + customer.getCustomerId() + "?",
                     "Remove Customer", JOptionPane.YES_NO_OPTION);
             if (confirm == JOptionPane.YES_OPTION) {
-                Writer.deleteCustomer(customer.getCustomerId());
+                String dataToSend = "deleteCustomer#" + customer.getCustomerId();
+                try {
+                    Constants.client.connect();
+                    Constants.client.sendData(dataToSend);
+                    String response = Constants.client.waitForResponse();
+                    System.out.println(response);  // Log server response
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                } finally {
+                    Constants.client.close();
+                }
+//                Writer.deleteCustomer(customer.getCustomerId());
                 custList.remove(customer);
                 tableModel.removeRow(row);
             }

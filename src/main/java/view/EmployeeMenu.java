@@ -6,17 +6,13 @@ import controller.NADRADB;
 import controller.TariffTaxInfo;
 import javax.swing.JButton;
 import javax.swing.JFrame;
-import javax.swing.JOptionPane;
 import java.awt.GridLayout;
-import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 import java.util.ArrayList;
-import javax.swing.JLabel;
-import javax.swing.JTextField;
-import model.Reader;
-import model.Writer;
+
 import utility.Constants;
-import utility.Help;
+import utility.Parsing;
 
 public class EmployeeMenu extends JFrame {
 
@@ -30,10 +26,43 @@ public class EmployeeMenu extends JFrame {
     public EmployeeMenu(String userName, String password) {
         this.userName = userName;
         this.password = password;
-        custList = Reader.readCustomerData();
-        billList = Reader.readBillingInfo();
-        rates = Reader.readTariffInfo();
-        nadraInfo = Reader.readNADRAInfo();
+        try {
+            Constants.client.connect();
+            Constants.client.sendData("readCustomerData#");
+            String customerResponse = Constants.client.waitForResponse();
+            custList = Parsing.parseCustomerData(customerResponse);
+            System.out.println(custList);
+            Constants.client.close();
+            Thread.sleep(500);
+            Constants.client.connect();
+            Constants.client.sendData("readBillingInfo#");
+            String billingResponse = Constants.client.waitForResponse();
+            billList = Parsing.parseBillingData(billingResponse);
+            System.out.println(billList);
+            Constants.client.close();
+            Thread.sleep(500);
+
+            Constants.client.connect();
+            Constants.client.sendData("readNADRAInfo#");
+            String nadraResponse = Constants.client.waitForResponse();
+            nadraInfo = Parsing.parseNADRAData(nadraResponse);
+            Constants.client.close();
+            Thread.sleep(500);
+            System.out.println(nadraInfo);
+
+            Constants.client.connect();
+            Constants.client.sendData("readtariffInfo#");
+            String tarifResponse = Constants.client.waitForResponse();
+            rates = Parsing.parseTariffData(tarifResponse);
+            Constants.client.close();
+            Thread.sleep(500);
+            System.out.println(rates);
+
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
         init();
     }
 

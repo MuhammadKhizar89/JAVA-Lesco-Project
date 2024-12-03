@@ -1,14 +1,12 @@
 package view;
-import controller.BillingInfo;
 import controller.Customer;
 import controller.NADRADB;
-import controller.TariffTaxInfo;
-import model.Writer;
 import utility.Constants;
 import utility.Help;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 import java.util.ArrayList;
 public class AddCustomerInfo extends JFrame {
     private JTextField cnicField, nameField, addressField, phoneField, customerTypeField, meterTypeField, connectionDateField;
@@ -137,7 +135,16 @@ public class AddCustomerInfo extends JFrame {
                 customerDataList.add("0");
                 customerDataList.add(meterType.equalsIgnoreCase("Three Phase") ? "0" : "0");
                 custList.add(new Customer(customerId, cnic, name, address, phone, customerType, meterType, connectionDate, "0", "0"));
-                Writer.write(Constants.CUSTOMERINFO, customerDataList);
+                String dataToSend = "AddCustomer#"+ String.join(";", customerDataList);
+                try {
+                    Constants.client.connect();
+                    Constants.client.sendData(dataToSend);
+                    Constants.client.waitForResponse();
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                } finally {
+                    Constants.client.close();
+                }
                 JOptionPane.showMessageDialog(null, "Customer added successfully. Customer ID: " + customerId, "Success", JOptionPane.INFORMATION_MESSAGE);
                 dispose();
             }

@@ -2,14 +2,12 @@ package view;
 
 import controller.Customer;
 import controller.BillingInfo;
-import javax.swing.table.DefaultTableModel;
+
 import javax.swing.*;
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import model.Writer;
+
 import utility.Constants;
 import utility.Help;
 
@@ -72,8 +70,35 @@ public class PayBillGUI extends JFrame {
         index.add("11");
         value.add("Paid");
         value.add(todayDate);
-        Writer.updateBillFile(Constants.BILLINGINFO, foundCustomer.getCustomerId(), billingMonth, index, value);
-        Writer.updateCustomerFile(Constants.CUSTOMERINFO, foundCustomer.getCustomerId(), foundBill.getCurrentMeterReadingRegular() - reg, foundBill.getCurrentMeterReadingPeak() - peak);
+        String payBillData = "payBill#" + foundCustomer.getCustomerId() + ";" + billingMonth + ";Paid;" + todayDate;
+        try {
+            Constants.client.connect();
+            Constants.client.sendData(payBillData);
+            String response = Constants.client.waitForResponse();
+            System.out.println(response); // Confirm server response
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        } finally {
+            Constants.client.close();
+        }
+
+// Prepare updateCustomerBillInfo request
+        int updatedRegular = foundBill.getCurrentMeterReadingRegular() - reg;
+        int updatedPeak = foundBill.getCurrentMeterReadingPeak() - peak;
+        String updateCustomerBillInfoData = "updateCustomerBillInfo#" + foundCustomer.getCustomerId() + ";" + updatedRegular + ";" + updatedPeak;
+
+        try {
+            Constants.client.connect();
+            Constants.client.sendData(updateCustomerBillInfoData);
+            String response = Constants.client.waitForResponse();
+            System.out.println(response);
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        } finally {
+            Constants.client.close();
+        }
+//        Writer.updateBillFile(Constants.BILLINGINFO, foundCustomer.getCustomerId(), billingMonth, index, value);
+//        Writer.updateCustomerFile(Constants.CUSTOMERINFO, foundCustomer.getCustomerId(), foundBill.getCurrentMeterReadingRegular() - reg, foundBill.getCurrentMeterReadingPeak() - peak);
         custList.get(i).setRegularUnitsConsumed(Integer.toString((foundBill.getCurrentMeterReadingRegular() - reg) + Integer.parseInt(foundCustomer.getRegularUnitsConsumed())));
         custList.get(i).setPeakHourUnitsConsumed(Integer.toString((foundBill.getCurrentMeterReadingPeak() - peak) + Integer.parseInt(foundCustomer.getPeakHourUnitsConsumed())));
         billList.get(j).setBillPaidStatus("Paid");

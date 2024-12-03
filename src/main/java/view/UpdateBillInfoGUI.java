@@ -6,8 +6,9 @@ import controller.TariffTaxInfo;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.io.IOException;
 import java.util.ArrayList;
-import model.Writer;
+
 import utility.Constants;
 public class UpdateBillInfoGUI {
     private JFrame frame;
@@ -17,13 +18,14 @@ public class UpdateBillInfoGUI {
     private ArrayList<BillingInfo> billList;
     private ArrayList<Customer> custList;
     private ArrayList<TariffTaxInfo> rates;
-
-    public UpdateBillInfoGUI(ArrayList<BillingInfo> billList, ArrayList<Customer> custList, ArrayList<TariffTaxInfo> rates, String customerId, String date) {
+Runnable runner;
+    public UpdateBillInfoGUI(ArrayList<BillingInfo> billList, ArrayList<Customer> custList, ArrayList<TariffTaxInfo> rates, String customerId, String date,Runnable onSuccess) {
         this.billList = billList;
         this.custList = custList;
         this.rates = rates;
         this.customerId = customerId;
         this.date = date;
+        this.runner=onSuccess;
         initialize();
     }
 
@@ -157,7 +159,19 @@ public class UpdateBillInfoGUI {
             index.add("6");
             index.add("7");
             index.add("8");
-            Writer.updateBillFile(Constants.BILLINGINFO, foundCustomer.getCustomerId(), date, index, allData);
+            String dataToSend = "updateBill#" + foundCustomer.getCustomerId() + ";" + billingMonth + ";" + String.join(";", allData);
+            try {
+                Constants.client.connect();
+                Constants.client.sendData(dataToSend);
+                String response = Constants.client.waitForResponse();
+                System.out.println(response);
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            } finally {
+                Constants.client.close();
+            }
+            runner.run();
+///            Writer.updateBillFile(Constants.BILLINGINFO, foundCustomer.getCustomerId(), date, index, allData);
             JOptionPane.showMessageDialog(frame, "Bill Updated Successfully", "Success", JOptionPane.INFORMATION_MESSAGE);
         } catch (NumberFormatException e) {
             JOptionPane.showMessageDialog(frame, "Invalid input. Please enter valid numbers for meter readings.", "Error", JOptionPane.ERROR_MESSAGE);

@@ -4,8 +4,9 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 import java.util.ArrayList;
-import model.Writer;
+
 import utility.Constants;
 public class ChangeEmpPass extends JFrame {
     private JTextField currentPasswordField;
@@ -53,7 +54,18 @@ public class ChangeEmpPass extends JFrame {
         ArrayList<String> value = new ArrayList<>();
         index.add("1"); // Assuming the password is at index 1
         value.add(newPassword);
-        Writer.updateFile(Constants.EMPLOYEESDATA, userName, index, value);
+        String dataToSend = "ChangePassword#" + userName + ";" + newPassword;
+        try {
+            Constants.client.connect();
+            Constants.client.sendData(dataToSend);
+            String serverResponse = Constants.client.waitForResponse();
+            JOptionPane.showMessageDialog(this, serverResponse, "Server Response", JOptionPane.INFORMATION_MESSAGE);
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        } finally {
+            Constants.client.close();
+        }
+//        Writer.updateFile(Constants.EMPLOYEESDATA, userName, index, value);
         JOptionPane.showMessageDialog(this, "Password Updated Successfully", "Success", JOptionPane.INFORMATION_MESSAGE);
         dispose();
     }

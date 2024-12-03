@@ -1,12 +1,12 @@
 package view;
 import controller.TariffTaxInfo;
-import model.Writer;
 import utility.Constants;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 import java.util.ArrayList;
 import javax.swing.table.TableCellRenderer;
 public class UpdateTariffInfoGUI extends JFrame {
@@ -94,14 +94,36 @@ public class UpdateTariffInfoGUI extends JFrame {
             selectedTariff.setPeakhourUnits(0);
         }
         int currentRow = selectedRow;
-        loadTariffData(); 
+        loadTariffData();
+        System.out.println(currentRow);
         tariffTable.setRowSelectionInterval(currentRow, currentRow);
-        Writer.overwriteTarrifFile(Constants.TARIFFTAX, tariffInfo);
+        sendTariffDataToServer(selectedTariff,currentRow);
+//        Writer.overwriteTarrifFile(Constants.TARIFFTAX, tariffInfo);
         JOptionPane.showMessageDialog(this, "Tariff information updated successfully.");
     } else {
         JOptionPane.showMessageDialog(this, "Please select a tariff to update.");
     }
 }
+    private void sendTariffDataToServer(TariffTaxInfo tariff,int row) {
+        try {
+            Constants.client.connect();
+            String dataToSend = String.format("updateTariff#%s;%d;%.2f;%d;%d;%d",
+                    tariff.getMeter_type(),
+                    tariff.getRegularUnits(),
+                    tariff.getPercentage(),
+                    tariff.getFixedCharges(),
+                    tariff.getPeakhourUnits(),
+                    row
+            );
+            Constants.client.sendData(dataToSend);
+            String response = Constants.client.waitForResponse();
+            System.out.println(response); // Server response
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            Constants.client.close();
+        }
+    }
     class ButtonRenderer extends JButton implements TableCellRenderer {
         public ButtonRenderer() {
             setOpaque(true);

@@ -7,10 +7,12 @@ import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.JOptionPane;
 import controller.Employee;
-import model.Reader;
 import utility.Constants;
+import utility.Parsing;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class SignInGUI extends JFrame {
@@ -28,7 +30,12 @@ public class SignInGUI extends JFrame {
         loginButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                authenticatedEmployee = authenticateEmployee();
+                try {
+                    authenticatedEmployee = authenticateEmployee();
+                } catch (IOException ex) {
+                    displayError("Server Error 404");
+                    return;
+                }
                 if (authenticatedEmployee != null) {
                     messageLabel.setText("Login Successful");
                     authenticatedEmployee.employeeMenu(); 
@@ -46,7 +53,13 @@ public class SignInGUI extends JFrame {
         loginButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                Customer authenticatedCustomer = authenticateCustomer();
+                Customer authenticatedCustomer = null;
+                try {
+                    authenticatedCustomer = authenticateCustomer();
+                } catch (IOException ex) {
+                    displayError("Server Error 404");
+                    return;
+                }
                 if (authenticatedCustomer != null) {
                     messageLabel.setText("Login Successful");
                     authenticatedCustomer.customerMenu();
@@ -94,10 +107,14 @@ setLocationRelativeTo(null);
         JOptionPane.showMessageDialog(this, message, "Login Failed", JOptionPane.ERROR_MESSAGE);
     }
 
-    private Employee authenticateEmployee() {
+    private Employee authenticateEmployee() throws IOException {
         String userName = usernameField.getText();
         String password = new String(passwordField.getPassword());
-        ArrayList<Employee> data = Reader.readEmployeeData(Constants.EMPLOYEESDATA);
+        Constants.client.connect();
+        Constants.client.sendData("readEmployeeInfo#");
+        String empResponse = Constants.client.waitForResponse();
+        ArrayList<Employee> data = Parsing.parseEmployeeData(empResponse);
+//        ArrayList<Employee> data = Reader.readEmployeeData(Constants.EMPLOYEESDATA);
         for (Employee e : data) {
             if (e.getUserName().equals(userName) && e.getPassword().equals(password)) {
                 return e;
@@ -106,10 +123,15 @@ setLocationRelativeTo(null);
         return null;
     }
 
-    private Customer authenticateCustomer() {
+    private Customer authenticateCustomer() throws IOException {
         String userName = usernameField.getText();
         String password = new String(passwordField.getPassword());
-        ArrayList<Customer> data = Reader.readCustomerData();
+        Constants.client.connect();
+        Constants.client.sendData("readCustomerData#");
+        String customerResponse = Constants.client.waitForResponse();
+        ArrayList<Customer> data = Parsing.parseCustomerData(customerResponse);
+        System.out.println(data);
+        Constants.client.close();
         for (Customer c : data) {
             if (c.getCustomerId().equals(userName) && c.getCnic().equals(password)) {
                 return c;

@@ -5,27 +5,53 @@ import controller.NADRADB;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
-import model.Reader;
-import model.Writer;
+
 import utility.Constants;
-import javax.swing.*;
-import javax.swing.table.DefaultTableModel;
-import java.util.ArrayList;
+import utility.Parsing;
+
 public class CustomerMenuGUI extends JFrame {
     private ArrayList<Customer> custList;
     private ArrayList<BillingInfo> billList;
     private ArrayList<NADRADB> nadraInfo;
     String CNIC, customerId;
     public CustomerMenuGUI(String CNIC, String customerId) {
+
         this.CNIC = CNIC;
         this.customerId = customerId;
-        custList = Reader.readCustomerData();
-        billList = Reader.readBillingInfo();
-        nadraInfo = Reader.readNADRAInfo();
+        System.out.println(CNIC+customerId);
+        try {
+            Constants.client.connect();
+            Constants.client.sendData("readCustomerData#");
+            String customerResponse = Constants.client.waitForResponse();
+            custList = Parsing.parseCustomerData(customerResponse);
+            System.out.println(custList);
+            Constants.client.close();
+            Thread.sleep(500);
+            Constants.client.connect();
+            Constants.client.sendData("readBillingInfo#");
+            String billingResponse = Constants.client.waitForResponse();
+            billList = Parsing.parseBillingData(billingResponse);
+            System.out.println(billList);
+            Constants.client.close();
+            Thread.sleep(500);
+            Constants.client.connect();
+            Constants.client.sendData("readNADRAInfo#");
+            String nadraResponse = Constants.client.waitForResponse();
+            nadraInfo = Parsing.parseNADRAData(nadraResponse);
+            Constants.client.close();
+            Thread.sleep(500);
+            System.out.println(nadraInfo);
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+
         setTitle("Customer Menu");
         setSize(400, 300);
         setLayout(null);
@@ -45,6 +71,8 @@ public class CustomerMenuGUI extends JFrame {
         add(exitButton);
         setVisible(true);
     }
+
+
     private void viewBill() {
         Customer foundCustomer = null;
         for (Customer c : custList) {
@@ -109,7 +137,8 @@ public class CustomerMenuGUI extends JFrame {
 
     private void updateCNICexpiry(ArrayList<NADRADB> nadraData) {
         NADRADB foundNadra = null;
-        for (NADRADB n : nadraData) {
+        for (NADRADB n : nadraInfo) {
+            System.out.println(n.getCNIC()+n.getExpiryDate()+n.getIssueDate());
             if (CNIC.equals(n.getCNIC())) {
 //                JOptionPane.showMessageDialog(this, "Your Current Info: " + n.toString(), "NADRA Info", JOptionPane.INFORMATION_MESSAGE);
                 foundNadra = n;
@@ -150,7 +179,19 @@ public class CustomerMenuGUI extends JFrame {
         ArrayList<String> value = new ArrayList<>();
         index.add("2");
         value.add(expiryDateInfo);
-        Writer.updateFile(Constants.NADRA, CNIC, index, value);
+        String dataToSend = "UpdateCNICExpiry#" + CNIC + ";" + expiryDateInfo;
+        try {
+            Constants.client.connect();
+            Constants.client.sendData(dataToSend);
+            String serverResponse = Constants.client.waitForResponse();
+            JOptionPane.showMessageDialog(this, serverResponse, "Server Response", JOptionPane.INFORMATION_MESSAGE);
+        } catch (IOException ex) {
+            ex.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Failed to update expiry date on server.", "Error", JOptionPane.ERROR_MESSAGE);
+        } finally {
+            Constants.client.close();
+        }
+
         foundNadra.setExpiryDate(expiryDateInfo);
         JOptionPane.showMessageDialog(this, "CNIC expiry date updated successfully.", "Success", JOptionPane.INFORMATION_MESSAGE);
     }

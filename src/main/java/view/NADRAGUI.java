@@ -134,5 +134,6 @@ public class NADRAGUI extends JFrame {
             new UpdateNADRAGUI(nadra,() ->populateTable());
             
         }
+
     }
 }

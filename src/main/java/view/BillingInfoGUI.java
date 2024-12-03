@@ -8,12 +8,13 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
-import model.Writer;
+
 import utility.Constants;
 
 public class BillingInfoGUI {
@@ -170,7 +171,17 @@ public class BillingInfoGUI {
         AllData.add(dateAfter7DaysFormatted);
         AllData.add("Unpaid");
         AllData.add("N/A");
-        Writer.write(Constants.BILLINGINFO, AllData);
+        String dataToSend = "AddBill#" + String.join(";", AllData);
+        try {
+            Constants.client.connect();
+            Constants.client.sendData(dataToSend);
+            Constants.client.waitForResponse();
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        } finally {
+            Constants.client.close();
+        }
+//        Writer.write(Constants.BILLINGINFO, AllData);
         billList.add(new BillingInfo(
                 customerId, billingMonth, currentMeterReadingRegular, currentMeterReadingPeak, todayDate, costofElectricity,
                 salesTax, fixed, totalBilling, dateAfter7DaysFormatted, "Unpaid", "N/A"));

@@ -21,20 +21,14 @@ public class AuthMenu extends JFrame {
         JButton button3 = new JButton("Login as Customer");
         JButton button4 = new JButton("Exit App");
         button1.setBounds(0, 0, 400, 50);
-        button2.setBounds(0, 50, 400, 50);
-        button3.setBounds(0, 100, 400, 50);
-        button4.setBounds(0, 150, 400, 50);
+        button3.setBounds(0, 50, 400, 50);
+        button4.setBounds(0, 100, 400, 50);
+//        button4.setBounds(0, 150, 400, 50);
         Authentication authObject = new Authentication();
         button1.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 Employee signInUser = authObject.signInEmployee();
-            }
-        });
-        button2.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                authObject.signUpEmployee();
             }
         });
         button3.addActionListener(new ActionListener() {
@@ -55,4 +49,5 @@ public class AuthMenu extends JFrame {
         add(button4);
         setVisible(true);
     }
+
 }

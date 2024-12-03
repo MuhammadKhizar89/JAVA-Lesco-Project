@@ -5,8 +5,9 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 import java.util.ArrayList;
-import model.Writer;
+
 import utility.Constants;
 public class UpdCustInfoGUI extends JFrame {
     private JTextField customerIdField;
@@ -155,7 +156,21 @@ public class UpdCustInfoGUI extends JFrame {
         customerDataList.add(customerType);
         customerDataList.add(meterType);
         customerDataList.add(connectionDate);
-        Writer.updateFile(Constants.CUSTOMERINFO, foundCustomer.getCustomerId(), indexList, customerDataList);
+        String dataToSend = "updateCustomer#" + foundCustomer.getCustomerId() + ";" +
+                String.join(",", indexList) + ";" +
+                String.join(";", customerDataList);
+
+        try {
+            Constants.client.connect();
+            Constants.client.sendData(dataToSend);
+            String response = Constants.client.waitForResponse();
+            System.out.println(response);  // Log server response
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        } finally {
+            Constants.client.close();
+        }
+//        Writer.updateFile(Constants.CUSTOMERINFO, foundCustomer.getCustomerId(), indexList, customerDataList);
         JOptionPane.showMessageDialog(this, "Customer Updated Successfully.", "Success", JOptionPane.INFORMATION_MESSAGE);
         onUpdateSuccess.run();
         dispose();
