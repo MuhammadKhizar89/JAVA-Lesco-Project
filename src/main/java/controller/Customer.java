@@ -1,16 +1,5 @@
 package controller;
 
-import utility.Constants;
-import controller.NADRADB;
-import model.Reader;
-import model.Writer;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
-import java.util.ArrayList;
-import java.util.Scanner;
-import view.CustomerMenuGUI;
-
 public class Customer {
 
     private String customerId;
@@ -142,8 +131,6 @@ public class Customer {
                 + '}';
     }
 
-    public void customerMenu() {
-        CustomerMenuGUI custmenuGUI=new  CustomerMenuGUI(cnic,customerId);        
-    }
+
 
 }

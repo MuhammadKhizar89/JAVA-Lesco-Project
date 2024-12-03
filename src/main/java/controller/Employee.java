@@ -1,20 +1,5 @@
 package controller;
 
-import utility.Constants;
-import utility.Help;
-import model.Reader;
-import model.Writer;
-import java.util.ArrayList;
-import java.util.Scanner;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import view.EmployeeMenu;
-
 public class Employee {
 
     private String userName;
@@ -721,10 +706,6 @@ public class Employee {
 //
 //    }
 
-    public void employeeMenu() {
-            EmployeeMenu menuGUI = new EmployeeMenu(userName,password);
-            menuGUI.setVisible(true);
-    }
 
     @Override
     public String toString() {
